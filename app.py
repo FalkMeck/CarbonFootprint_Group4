@@ -205,24 +205,24 @@ def results():
      st.session_state['Energy efficiency'],
      st.session_state['Transport']]], columns=all_names)
     
-    st.write(data)
-    st.write(encoder.feature_names_in_)
+   # st.write(data[0])
+   # st.write(encoder.feature_names_in_)
 #    st.write('The scikit-learn version is {}.'.format(sklearn.__version__))
 #    st.write(f"Data type: {type(data)}")
     
 # Encode the categorical data
-#    try:
-#        X = encoder.transform(data)
-#        st.write(f"Data after encoding: {X}")
-#    except Exception as e:
-#        st.error(f"Error during encoding: {e}")
-#        return
+    try:
+        X = encoder.transform(data)
+        st.write(f"Data after encoding: {X}")
+    except Exception as e:
+        st.write(f"Error during encoding: {e}")
+        st.write("Using toy example")
+        X = [[0,1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,0,1,200,500,2,12,2,12,1,1,1,1,1,0,1,0,0]]
     
     
    #  X = encoder.transform(data)
     #st.write(X)
     #st.write(model.coef_)
-    X = [[0,1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,0,1,200,500,2,12,2,12,1,1,1,1,1,0,1,0,0]]
     
     try:
         prediction = model.predict(X)
