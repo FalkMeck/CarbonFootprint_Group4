@@ -35,6 +35,15 @@ def load_model_and_encoder():
 
 model, encoder = load_model_and_encoder()
 
+# Debug statements to verify the loaded objects
+st.write(f"Model type: {type(model)}")
+st.write(f"Encoder type: {type(encoder)}")
+
+# Ensure that the encoder has the 'transform' method
+if not hasattr(encoder, 'transform'):
+    st.error("Loaded encoder does not have a 'transform' method. Check the pickle file.")
+
+
 # Add debug statements
 st.write("Model and encoder loaded successfully")
 
