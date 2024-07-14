@@ -205,8 +205,8 @@ def results():
      st.session_state['Energy efficiency'],
      st.session_state['Transport']]], columns=all_names)
     
-#    st.write(data)
-#    st.write(f"Encoder type: {type(encoder)}")
+    st.write(data)
+    st.write(encoder.feature_names_in_)
 #    st.write('The scikit-learn version is {}.'.format(sklearn.__version__))
 #    st.write(f"Data type: {type(data)}")
     
