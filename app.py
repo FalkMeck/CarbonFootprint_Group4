@@ -226,7 +226,7 @@ def results():
     
     try:
         prediction = model.predict(X)
-        st.write("Prediction:", prediction[0])
+       # st.write("Prediction:", prediction[0])
     except Exception as e:
         st.error(f"Error during prediction: {e}")
 
