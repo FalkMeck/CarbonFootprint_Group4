@@ -31,6 +31,7 @@ st.write(f"Encoder type: {type(encoder)}")
 # Ensure that the encoder has the 'transform' method
 if not hasattr(encoder, 'transform'):
     st.error("Loaded encoder does not have a 'transform' method. Check the pickle file.")
+    st.stop()
 
 
 # Add debug statements
@@ -203,7 +204,7 @@ def results():
      st.session_state['Transport']]], columns=all_names)
     
     st.write(f"Data before encoding: {data}")
-
+    st.write(f"Encoder type: {type(encoder)}")
 # Encode the categorical data
     try:
         X = encoder.transform(data)
