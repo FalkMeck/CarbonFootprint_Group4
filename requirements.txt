@@ -1,3 +1,4 @@
 streamlit
 pandas
 scikit-learn==1.2.2
+pkg_resources
