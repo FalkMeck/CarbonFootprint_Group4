@@ -205,6 +205,9 @@ def results():
     
     st.write(f"Data before encoding: {data}")
     st.write(f"Encoder type: {type(encoder)}")
+    
+    st.write(f"Data type: {type(data)}")
+    
 # Encode the categorical data
     try:
         X = encoder.transform(data)
