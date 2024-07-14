@@ -12,8 +12,8 @@ Created on Sun Jul  7 13:08:24 2024
 import streamlit as st
 import pandas as pd
 import pickle
-import pkg_resources
-pkg_resources.require("sklearn==1.2.2")
+#import pkg_resources
+#pkg_resources.require("sklearn==1.2.2")
 import sklearn
 ## Create the survey
 # GitHub
@@ -27,8 +27,8 @@ def load_model_and_encoder():
 model, encoder = load_model_and_encoder()
 
 # Debug statements to verify the loaded objects
-st.write(f"Model type: {type(model)}")
-st.write(f"Encoder type: {type(encoder)}")
+#st.write(f"Model type: {type(model)}")
+#st.write(f"Encoder type: {type(encoder)}")
 
 # Ensure that the encoder has the 'transform' method
 if not hasattr(encoder, 'transform'):
@@ -205,23 +205,25 @@ def results():
      st.session_state['Energy efficiency'],
      st.session_state['Transport']]], columns=all_names)
     
-    st.write(data)
-    st.write(f"Encoder type: {type(encoder)}")
-    st.write('The scikit-learn version is {}.'.format(sklearn.__version__))
-    st.write(f"Data type: {type(data)}")
+#    st.write(data)
+#    st.write(f"Encoder type: {type(encoder)}")
+#    st.write('The scikit-learn version is {}.'.format(sklearn.__version__))
+#    st.write(f"Data type: {type(data)}")
     
 # Encode the categorical data
-    try:
-        X = encoder.transform(data)
-        st.write(f"Data after encoding: {X}")
-    except Exception as e:
-        st.error(f"Error during encoding: {e}")
-        return
+#    try:
+#        X = encoder.transform(data)
+#        st.write(f"Data after encoding: {X}")
+#    except Exception as e:
+#        st.error(f"Error during encoding: {e}")
+#        return
     
     
    #  X = encoder.transform(data)
     #st.write(X)
     #st.write(model.coef_)
+    X = [0,1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,0,1,200,500,2,12,2,12,1,1,1,1,1,0,1,0,0]
+    
     try:
         prediction = model.predict(X)
         st.write("Prediction:", prediction[0])
