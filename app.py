@@ -206,7 +206,7 @@ def results():
     
     st.write(data)
     st.write(f"Encoder type: {type(encoder)}")
-    print('The scikit-learn version is {}.'.format(sklearn.__version__))
+    st.write('The scikit-learn version is {}.'.format(sklearn.__version__))
     st.write(f"Data type: {type(data)}")
     
 # Encode the categorical data
