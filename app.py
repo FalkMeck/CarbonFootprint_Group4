@@ -10,21 +10,10 @@ Created on Sun Jul  7 13:08:24 2024
 #in an interactive format.
 #"""
 import streamlit as st
-#import streamlit_survey as ss
 import pandas as pd
-#import os
 import pickle
 
 ## Create the survey
-# LOCAL
-#streamlit run D:\TechLabs\StreamLitApp_Kopie\CarbonFootprint_stApp.py
-#path = os.path.dirname(__file__)
-#path = "D:\TechLabs\StreamLitApp"
-#with open(path + '\model.pkl', 'rb') as f:
- #    model = pickle.load(f)
-#with open(path + '\encoder.pkl', 'rb') as f:
- #    encoder = pickle.load(f)
-
 # GitHub
 def load_model_and_encoder():
     with open('model.pkl', 'rb') as model_file:
@@ -213,11 +202,26 @@ def results():
      st.session_state['Energy efficiency'],
      st.session_state['Transport']]], columns=all_names)
     
-    X = encoder.transform(data)
+    st.write(f"Data before encoding: {data}")
+
+# Encode the categorical data
+    try:
+        X = encoder.transform(data)
+        st.write(f"Data after encoding: {X}")
+    except Exception as e:
+        st.error(f"Error during encoding: {e}")
+        return
+    
+    
+   #  X = encoder.transform(data)
     #st.write(X)
     #st.write(model.coef_)
-    
-    prediction = model.predict(X)
+    try:
+        prediction = model.predict(X)
+        st.write("Prediction:", prediction[0])
+    except Exception as e:
+        st.error(f"Error during prediction: {e}")
+
     
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
