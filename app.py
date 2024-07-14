@@ -12,6 +12,7 @@ Created on Sun Jul  7 13:08:24 2024
 import streamlit as st
 import pandas as pd
 import pickle
+import sklearn
 
 ## Create the survey
 # GitHub
@@ -205,7 +206,7 @@ def results():
     
     st.write(data)
     st.write(f"Encoder type: {type(encoder)}")
-    
+    print('The scikit-learn version is {}.'.format(sklearn.__version__))
     st.write(f"Data type: {type(data)}")
     
 # Encode the categorical data
