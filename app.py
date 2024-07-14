@@ -203,7 +203,7 @@ def results():
      st.session_state['Energy efficiency'],
      st.session_state['Transport']]], columns=all_names)
     
-    st.write(f"Data before encoding: {data}")
+    st.write(data)
     st.write(f"Encoder type: {type(encoder)}")
     
     st.write(f"Data type: {type(data)}")
