@@ -14,7 +14,7 @@ import pandas as pd
 import pickle
 #import pkg_resources
 #pkg_resources.require("sklearn==1.2.2")
-import sklearn
+#import sklearn
 ## Create the survey
 # GitHub
 def load_model_and_encoder():
