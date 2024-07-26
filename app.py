@@ -213,18 +213,18 @@ def results():
 #    st.write(f"Data type: {type(data)}")
     
 # Encode the categorical data
-    try:
-        X = encoder.transform(data)
-        st.write(f"Data after encoding: {X}")
-    except Exception as e:
-        st.write(f"Error during encoding: {e}")
-        st.write("Using toy example")
-        X = [[0,1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,0,1,200,500,2,12,2,12,1,1,1,1,1,0,1,0,0]]
+    # try:
+    #     X = encoder.transform(data)
+    #     st.write(f"Data after encoding: {X}")
+    # except Exception as e:
+    #     st.write(f"Error during encoding: {e}")
+    #     st.write("Using toy example")
+    #     X = [[0,1,0,1,0,0,1,0,0,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,0,0,1,200,500,2,12,2,12,1,1,1,1,1,0,1,0,0]]
     
     
-   #  X = encoder.transform(data)
-    #st.write(X)
-    #st.write(model.coef_)
+    X = encoder.transform(data)
+    st.write(X)
+    st.write(model.coef_)
     
     try:
         prediction = model.predict(X)
