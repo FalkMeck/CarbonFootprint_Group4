@@ -163,6 +163,8 @@ def survey_travel():
 
 
 def results():
+    model, encoder = load_model_and_encoder()
+
     st.title("Carbon Footpint Questionnaire")
     st.header("Results")
     
