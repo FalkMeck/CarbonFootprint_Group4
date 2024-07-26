@@ -22,6 +22,10 @@ def load_model_and_encoder():
         model = pickle.load(model_file)
     with open('encoder.pkl', 'rb') as encoder_file:
         encoder = pickle.load(encoder_file)
+        # Ensure that the encoder has the 'transform' method
+        if not hasattr(encoder, 'transform'):
+            st.error("Loaded encoder does not have a 'transform' method. Check the pickle file.")
+            st.stop()
     return model, encoder
 
 model, encoder = load_model_and_encoder()
@@ -29,11 +33,6 @@ model, encoder = load_model_and_encoder()
 # Debug statements to verify the loaded objects
 #st.write(f"Model type: {type(model)}")
 #st.write(f"Encoder type: {type(encoder)}")
-
-# Ensure that the encoder has the 'transform' method
-if not hasattr(encoder, 'transform'):
-    st.error("Loaded encoder does not have a 'transform' method. Check the pickle file.")
-    st.stop()
 
 
 # Add debug statements
