@@ -36,7 +36,8 @@ model, encoder = load_model_and_encoder()
 
 
 # Add debug statements
-st.write("Model and encoder loaded successfully")
+if hasattr(encoder, 'transform'):
+    st.write("Model and encoder loaded successfully")
 
 def survey_welcome():
     st.title("Carbon Footprint Questionnaire")
