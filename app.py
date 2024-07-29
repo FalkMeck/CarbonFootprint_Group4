@@ -70,7 +70,7 @@ def survey_welcome():
     
     if st.button("Start"):
         st.session_state['page'] = 'survey_demo'
-        st.experimental_rerun()
+        st.rerun()
 
 def survey_demo():
     st.title("Carbon Footprint Questionnaire")
@@ -101,7 +101,7 @@ def survey_demo():
         st.session_state['Sex'] = sex
         st.session_state['Diet'] = diet
         st.session_state['page'] = 'survey_life'
-        st.experimental_rerun()
+        st.rerun()
         
 
 def survey_life():
@@ -132,10 +132,10 @@ def survey_life():
         st.session_state['How_Long_Internet_Daily_Hour'] = internet
         
         st.session_state['page'] = 'survey_energy'
-        st.experimental_rerun()
+        st.rerun()
     if st.button("Back"):
         st.session_state['page'] = 'survey_demo'
-        st.experimental_rerun()
+        st.rerun()
 
 def survey_energy():
     st.title("Carbon Footpint Questionnaire")
@@ -153,10 +153,10 @@ def survey_energy():
         st.session_state['Energy_efficiency'] = energy_eff
         
         st.session_state['page'] ='survey_travel'
-        st.experimental_rerun()
+        st.rerun()
     if st.button("Back"):
         st.session_state['page'] = 'survey_life'
-        st.experimental_rerun()
+        st.rerun()
                 
 
 def survey_travel():
@@ -173,10 +173,10 @@ def survey_travel():
          st.session_state['Frequency_of_Traveling_by_Air'] = plane
          
          st.session_state['page'] ='results'
-         st.experimental_rerun()
+         st.rerun()
     if st.button("Back"):
          st.session_state['page'] = 'survey_energy'
-         st.experimental_rerun()
+         st.rerun()
 
 
 def results():
