@@ -11,28 +11,32 @@ Created on Sun Jul  7 13:08:24 2024
 #"""
 import streamlit as st
 import pandas as pd
-import numpy as np
 import pickle
 import sklearn
+import numpy as np
+import matplotlib.image as img
+import math
 
-st.write(sklearn.__version__)
+# st.write(sklearn.__version__)
 
 ## Create the survey
 #LOCAL
 #streamlit run D:\TechLabs\StreamLitApp_Kopie\CarbonFootprint_stApp.py
 # Function to load model and encoder, cached using st.cache_resource
-# GitHub
 @st.cache_resource
 def load_model_and_encoder():
-    #path = os.path.dirname(__file__)
-    #path = "D:\TechLabs\StreamLitApp_Kopie"
     with open('model2.pkl', 'rb') as f:
         model_f = pickle.load(f)
     with open('encoder2.pkl', 'rb') as f:
         encoder_f = pickle.load(f)
     return model_f, encoder_f
 
+@st.cache_resource
+def load_earth_image():
+    image = img.imread('earth.jpg') 
+    return image
 
+# GitHub
 # def load_model_and_encoder():
 #     with open(path +'\model.pkl', 'rb') as model_file:
 #         model = pickle.load(model_file)
@@ -41,19 +45,20 @@ def load_model_and_encoder():
 #     return model, encoder
 
 model, encoder = load_model_and_encoder()
+earth = load_earth_image()
 
 # Debug statements to verify the loaded objects
-st.write(f"Model type: {type(model)}")
-st.write(f"Encoder type: {type(encoder)}")
+#st.write(f"Model type: {type(model)}")
+#st.write(f"Encoder type: {type(encoder)}")
 
 # Ensure that the encoder has the 'transform' method
-if not hasattr(encoder, 'transform'):
-    st.error("Loaded encoder does not have a 'transform' method. Check the pickle file.")
+#if not hasattr(encoder, 'transform'):
+ #   st.error("Loaded encoder does not have a 'transform' method. Check the pickle file.")
 
 
 
 # Add debug statements
-st.write("Model and encoder loaded successfully")
+#st.write("Model and encoder loaded successfully")
 
 def survey_welcome():
     st.title("Carbon Footprint Questionnaire")
@@ -63,7 +68,9 @@ def survey_welcome():
              
              this questionnaire helps you to figure out,
              what your current, monthly Carbon Footprint is.
-             After that it will show you personilized options what you can do to improve it (To Do)
+             
+             After that it will show you your main areas of concern.
+             You can play around with how improving in these areas would reduce your Carbon Footprint.
              
              Thank you for caring for the environment!
              """)
@@ -75,16 +82,43 @@ def survey_welcome():
 def survey_demo():
     st.title("Carbon Footprint Questionnaire")
     st.header("Demographics")
+    st.write("First, we start with some inforamtion about yourself...")
+    
+    # QUESTION FOR HEIGHT
+    if 'Height_tmp' in st.session_state: # check if previously answered
+        default = st.session_state['Height_tmp'] # use previous value
+    else:
+        default = 170 # use default
+    height = st.number_input("Height (in cm):", min_value = 50, max_value = 270, value = default)
+    
+    # QUESION FOR WEIGHT
+    if 'Weight_tmp' in st.session_state: # check if previously answered
+        default = st.session_state['Weight_tmp'] # use previous answer
+    else:
+        default = 70 # use default
+    weight = st.number_input("Weight (in kg):", min_value = 30, max_value = 600, value = default)
+    
+    # QUESTION FOR SEX
+    questOptions = ["female", "male"] # define options
+    if 'Sex' in st.session_state: # check if question has been nswered yet
+        default = questOptions.index(st.session_state['Sex']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    sex = st.radio("Sex:", options = questOptions, horizontal = True, index = default)
+    
+    # QUESTION FOR Diet
+    questOptions = ["omnivore", "pescatarian", "vegetarian", "vegan"] # define options
+    if 'Diet' in st.session_state: # check if question has been nswered yet
+        default = questOptions.index(st.session_state['Diet']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    diet = st.radio("What is your diet?", options = questOptions, horizontal = True, index = default)
 
-    height = st.number_input("Height (in cm):", min_value = 50, max_value = 270, value = 170)
+    col1, col2, col3 = st.columns(3)
+    with col3:
+       Next = st.button("Next")
     
-    weight = st.number_input("Weight (in kg):", min_value = 30, max_value = 600, value = 70)
-    
-    sex = st.radio("Sex:", options = ["female", "male"], horizontal = True)
-    
-    diet = st.radio("What is your diet?", options = ["omnivore", "pescatarian", "vegetarian", "vegan"], horizontal = True)
-
-    if st.button("Next"):
+    if Next:
         
         bmi = weight/((height/100)**2)
     
@@ -98,6 +132,8 @@ def survey_demo():
         else:
             body_type = "underweight"
         st.session_state['Body_Type'] = body_type
+        st.session_state['Height_tmp'] = height
+        st.session_state['Weight_tmp'] = weight
         st.session_state['Sex'] = sex
         st.session_state['Diet'] = diet
         st.session_state['page'] = 'survey_life'
@@ -107,25 +143,89 @@ def survey_demo():
 def survey_life():
     st.title("Carbon Footpint Questionnaire")
     st.header("Daily life")
+    st.write("Now some questions about your day to day activties, expenses and the waste you produce.")
     
-    shower = st.radio("How often do you shower?", options = ["daily", "less frequently", "more frequently", "twice a day"], horizontal = True)
-    social = st.radio("How often do you engage in social activities?", options = ["never","sometimes", "often",], horizontal = True)
-    groceries = st.number_input("How much do you spend on groceries in a month (in Euro)?", min_value = 0, max_value = int(1e6), value = 0)
-    clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0, max_value = int(1e6), value = 0)    
-    wastebag_size = st.radio("Which size of trashbag are you using?", options = ["small", "medium", "large", "extra large"], horizontal = True)
-    wastebag_count = st.number_input("How many bags of waste do you produce per week?", min_value = 0, max_value = int(1e6), value = 0)
-    recycle = st.multiselect("Which of the following materials are you recycling?", options = ["Paper", "Plastic", "Glass","Metal"])
-    tvpc = st.number_input("How many hours do you spend infront of the TV or PC per day?", min_value = 0, max_value = 24, value = 0)
-    internet = st.number_input("How many hours do you use the internet per day?", min_value = 0, max_value = 24, value = 0)
+    # QUESTION FOR Showering
+    questOptions = ["daily", "less frequently", "more frequently", "twice a day"] # define options
+    if 'How_Often_Shower' in st.session_state: # check if question has been nswered yet
+        default = questOptions.index(st.session_state['How_Often_Shower']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    shower = st.radio("How often do you shower?", options = questOptions, horizontal = True, index = default)
     
-    if st.button("Next"):
+    # QUESTION FOR Social activities
+    questOptions = ["never","sometimes", "often"] # define options
+    if 'Social_Activity' in st.session_state: # check if question has been nswered yet
+        default = questOptions.index(st.session_state['Social_Activity']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    social = st.radio("How often do you engage in social activities?", options = questOptions, horizontal = True, index = default)
+    
+    # QUESTION FOR Groceries
+    if 'Monthly_Grocery_Bill' in st.session_state: # check if previously answered
+        default = st.session_state['Monthly_Grocery_Bill'] # use previous value
+    else:
+        default = 1 # use default
+    groceries = st.number_input("How much do you spend on groceries in a month (in Euro)?", min_value = 0, max_value = int(1e6), value = default)
+    
+    # QUESTION FOR New CLothes
+    if 'How_Many_New_Clothes_Monthly' in st.session_state: # check if previously answered
+        default = st.session_state['How_Many_New_Clothes_Monthly'] # use previous value
+    else:
+        default = 1 # use default
+    clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0, max_value = int(1e6), value = default)    
+    
+    # QUESTION FOR Waste Bag size
+    questOptions = ["small", "medium", "large", "extra large"] # define options
+    if 'Waste_Bag_Size' in st.session_state: # check if question has been nswered yet
+        default = questOptions.index(st.session_state['Waste_Bag_Size']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    wastebag_size = st.radio("Which size of trashbag are you using?", options = questOptions, horizontal = True, index = default)
+    
+    # QUESTION FOR Waste Bag Count
+    if 'Waste_Bag_Weekly_Count' in st.session_state: # check if previously answered
+        default = st.session_state['Waste_Bag_Weekly_Count'] # use previous value
+    else:
+        default = 1 # use default
+    wastebag_count = st.number_input("How many bags of waste do you produce per week?", min_value = 0, max_value = int(1e6), value = default)
+   
+    # QUESTION FOR RECYCLING
+    recycle_options = ["Paper", "Plastic", "Glass","Metal"]
+    default = []
+    if 'Recycling_Paper' in st.session_state:
+        for rec in recycle_options:
+            if st.session_state['Recycling_' + rec] == 1:
+                default.append(rec)
+    recycle = st.multiselect("Which of the following materials are you recycling?", options = recycle_options, default = default)
+    
+    # QUESTION FOR TV/PC usage
+    if 'How_Long_TV_PC_Daily_Hour' in st.session_state: # check if previously answered
+        default = st.session_state['How_Long_TV_PC_Daily_Hour'] # use previous value
+    else:
+        default = 1 # use default
+    tvpc = st.number_input("How many hours do you spend infront of the TV or PC per day?", min_value = 0, max_value = 24, value = default)
+    
+    # QUESTION FOR Internet usage
+    if 'How_Long_Internet_Daily_Hour' in st.session_state: # check if previously answered
+        default = st.session_state['How_Long_Internet_Daily_Hour'] # use previous value
+    else:
+        default = 1 # use default
+    internet = st.number_input("How many hours do you use the internet per day?", min_value = 0, max_value = 24, value = default)
+    
+    col1, col2, col3 = st.columns(3)
+    with col3:
+       Next = st.button("Next")
+    with col1:
+       Back = st.button("Back")
+    
+    if Next:
         st.session_state['How_Often_Shower'] = shower
         st.session_state['Social_Activity'] = social
         st.session_state['Monthly_Grocery_Bill'] = groceries
         st.session_state['How_Many_New_Clothes_Monthly'] = clothes
         st.session_state['Waste_Bag_Size'] = wastebag_size
         st.session_state['Waste_Bag_Weekly_Count'] = wastebag_count
-        recycle_options = ["Paper", "Plastic", "Glass","Metal"]
         for rec in recycle_options:
             st.session_state['Recycling_' + rec] = 1 if rec in recycle else 0
         st.session_state['How_Long_TV_PC_Daily_Hour'] = tvpc
@@ -133,28 +233,55 @@ def survey_life():
         
         st.session_state['page'] = 'survey_energy'
         st.rerun()
-    if st.button("Back"):
+    if Back:
         st.session_state['page'] = 'survey_demo'
         st.rerun()
 
 def survey_energy():
     st.title("Carbon Footpint Questionnaire")
     st.header("Energy efficiency")
+    st.write("How enegery efficient are you already?")
     
-    energy = st.radio("What is your main source of engery for heating?", options = ["coal", "electricity", "natural gas", "wood"], horizontal = True)
-    cooking = st.multiselect("Which of the following appliances do you use for cooking?", options = ["Stove", "Oven", "Microwave", "Grill"])
-    energy_eff = st.radio("Would you consider your electric appliances as enegy efficient?", options = ["Yes", "No", "Sometimes"], horizontal = True)
+    # QUESTION FOR Energy of you heating source
+    questOptions = ["coal", "electricity", "natural gas", "wood"] # define options
+    if 'Heating_Energy_Source' in st.session_state: # check if question has been nswered yet
+        default = questOptions.index(st.session_state['Heating_Energy_Source']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    energy = st.radio("What is your main source of engery for heating?", options = questOptions, horizontal = True, index = default)
     
-    if st.button("Next"):
+    # QUESTION FOR your cooking appliences
+    cooking_options = ["Stove", "Oven", "Microwave", "Grill"]
+    default = []
+    if 'Cooking_With_Stove' in st.session_state:
+        for cook in cooking_options:
+            if st.session_state['Cooking_' + cook] == 1:
+                default.append(cook)
+    cooking = st.multiselect("Which of the following appliances do you use for cooking?", options = cooking_options, default = default)
+    
+    # QUESTION FOR Waste Bag size
+    questOptions = ["Yes", "No", "Sometimes"] # define options
+    if 'Energy_efficiency' in st.session_state: # check if question has been nswered yet
+        default = questOptions.index(st.session_state['Energy_efficiency']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    energy_eff = st.radio("Would you consider your electric appliances as energy efficient?", options = questOptions, horizontal = True, index = default)
+    
+    col1, col2, col3 = st.columns(3)
+    with col3:
+       Next = st.button("Next")
+    with col1:
+       Back = st.button("Back")
+
+    if Next:
         st.session_state['Heating_Energy_Source'] = energy
-        cooking_options = ["Stove", "Oven", "Microwave", "Grill"]
         for cook in cooking_options:
             st.session_state['Cooking_With_' + cook] = 1 if cook in cooking else 0
         st.session_state['Energy_efficiency'] = energy_eff
         
         st.session_state['page'] ='survey_travel'
         st.rerun()
-    if st.button("Back"):
+    if Back:
         st.session_state['page'] = 'survey_life'
         st.rerun()
                 
@@ -162,19 +289,45 @@ def survey_energy():
 def survey_travel():
     st.title("Carbon Footpint Questionnaire")
     st.header("Travelling")
+    st.write("Lastly, some question about yout means of getting around and how much you travel.")
     
-    transport = st.radio("What is your main method of transportation?", options = ["walk/bicycle", "public transport", "car (type: petrol)", "car (type: diesel)", "car (type: electric)", "car (type: hybrid)", "car (type: lpg)"], horizontal = False)
-    km =  st.number_input("How many kilometers do you travel per month?", min_value = 0, max_value = int(1e6), value = 0)
-    plane = st.radio("How often did you travel by plane in the last month?", options = ["never", "rarely", "frequently", "very frequently"], horizontal = True)
+    # QUESTION FOR main means of transportations
+    questOptions = ["walk/bicycle", "public transport", "car (type: petrol)", "car (type: diesel)", "car (type: electric)", "car (type: hybrid)", "car (type: lpg)"]# define options
+    if 'Transport' in st.session_state: # check if question has been nswered yet
+        default = questOptions.index(st.session_state['Transport']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    transport = st.radio("What is your main method of transportation?", options = questOptions, horizontal = False, index = default)
+   
+    # QUESTION FOR distance traveled monthly
+    if 'Vehicle_Monthly_Distance_Km' in st.session_state: # check if previously answered
+        default = st.session_state['Vehicle_Monthly_Distance_Km'] # use previous value
+    else:
+        default = 1 # use default
+    km =  st.number_input("How many kilometers do you travel per month?", min_value = 0, max_value = int(1e6), value = default)
+   
+    # QUESTION FOR Frequency of plane usage
+    questOptions = ["never", "rarely", "frequently", "very frequently"] # define options
+    if 'Frequency_of_Traveling_by_Air' in st.session_state: # check if question has been nswered yet
+        default = questOptions.index(st.session_state['Frequency_of_Traveling_by_Air']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    plane = st.radio("How often did you travel by plane in the last month?", options = questOptions, horizontal = True, index = default)
 
-    if st.button("Show Results"):
+    col1, col2, col3 = st.columns(3)
+    with col3:
+       Next = st.button("Show Results")
+    with col1:
+       Back = st.button("Back")
+
+    if Next:
          st.session_state['Transport'] = transport
          st.session_state['Vehicle_Monthly_Distance_Km'] = km
          st.session_state['Frequency_of_Traveling_by_Air'] = plane
          
          st.session_state['page'] ='results'
          st.rerun()
-    if st.button("Back"):
+    if Back:
          st.session_state['page'] = 'survey_energy'
          st.rerun()
 
@@ -182,8 +335,8 @@ def survey_travel():
 def results():
     st.title("Carbon Footpint Questionnaire")
     st.header("Results")
-    
-    ordinalVar=['Body_Type', 'Diet', 'How_Often_Shower', 'Social_Activity','Frequency_of_Traveling_by_Air', 
+
+    ordinalVar=['Body_Type', 'Diet', 'How_Often_Shower', 'Social_Activity', 'Frequency_of_Traveling_by_Air',
                 'Waste_Bag_Size', 'Energy_efficiency']
     dummyVar=['Sex', 'Heating_Energy_Source','Transport_Vehicle_Type']
     numVar = ['Monthly_Grocery_Bill','Vehicle_Monthly_Distance_Km', 'Waste_Bag_Weekly_Count', 'How_Long_TV_PC_Daily_Hour',
@@ -192,7 +345,7 @@ def results():
                'Recycling_Plastic', 'Recycling_Paper',
                'Cooking_With_Oven', 'Cooking_With_Stove', 
                'Cooking_With_Grill','Cooking_With_Microwave']
-
+    
     all_names = ordinalVar + dummyVar + numVar + restVar
     
     data = pd.DataFrame([[st.session_state['Body_Type'],
@@ -213,27 +366,45 @@ def results():
      st.session_state['How_Long_TV_PC_Daily_Hour'],
      st.session_state['How_Many_New_Clothes_Monthly'],
      st.session_state['How_Long_Internet_Daily_Hour'],
-     st.session_state['Recycling_Metal'],
      st.session_state['Recycling_Glass'],
-     st.session_state['Recycling_Paper'],
+     st.session_state['Recycling_Metal'],
      st.session_state['Recycling_Plastic'],
-     st.session_state['Cooking_With_Stove'],
-     st.session_state['Cooking_With_Microwave'],
+     st.session_state['Recycling_Paper'],
      st.session_state['Cooking_With_Oven'],
-     st.session_state['Cooking_With_Grill']]], columns=all_names)
+     st.session_state['Cooking_With_Stove'],
+     st.session_state['Cooking_With_Grill'],
+     st.session_state['Cooking_With_Microwave']]], columns=all_names)
     
     X = encoder.transform(data)
     #st.write(X)
     #st.write(model.coef_)
     
     prediction = model.predict(X)
-    
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
     st.header(str(round(prediction[0])) + " " + unit.translate(SUB))
     #st.write(str(round(prediction[0])))
-     
+    
+    sequestration_rate = 2100
+    gha_earth = 1.63
+
+    earths = round(((prediction[0]*12)/sequestration_rate)/gha_earth,3)
+    earths_max = math.ceil(earths)
+
+    earthsImage = []
+    for i in range(earths_max):
+        if i == 0:
+            earthsImage = earth
+        else:
+            earthsImage = np.append(earthsImage, earth, 1)
+    
+    st.write("You woud need")
+    st.header(str(earths) + " Earths to live")
+    
+    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto")
+    
+    
     if st.button("Show How to Improve"):
          st.session_state['prediction'] = prediction[0]
          st.session_state['dataX'] = X
@@ -275,7 +446,7 @@ def improvement():
     
     st.title("Carbon Footpint Questionnaire")
     
-    st.write("Your current, monthly Carbon Footprint is:")
+    st.write("Your current, monthly Carbon Footprint before applying any changes is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
     st.header(str(round(st.session_state['prediction'])) + " " + unit.translate(SUB))
@@ -292,7 +463,7 @@ def improvement():
     else:
         shower_new = st.session_state['How_Often_Shower']
     if all_names[3] in topfeatures:
-        social_new = st.select_slider("Consider to reduce unnecessary social activiest: ", options = ["never","sometimes", "often"], value = st.session_state['Social_Activity'])
+        social_new = st.select_slider("Consider to reduce unnecessary social activities: ", options = ["never","sometimes", "often"], value = st.session_state['Social_Activity'])
     else:
         social_new = st.session_state['Social_Activity']
     if all_names[4] in topfeatures:
@@ -312,8 +483,9 @@ def improvement():
     else:
         heating_new = st.session_state['Heating_Energy_Source']
     if all_names[9] in topfeatures:
-        transport_new = st.select_slider("Consider switching to a better way of transportation: ", 
-                                     options = ["car (type: electric)", "car (type: hybrid)","public transport","walk/bicycle", "car (type: diesel)",  "car (type: lpg)", "car (type: petrol)"], value = st.session_state['Transport'])
+        transportOptions = ["car (type: electric)", "car (type: hybrid)","public transport","walk/bicycle", "car (type: diesel)",  "car (type: lpg)", "car (type: petrol)"]
+        transIndex = transportOptions.index(st.session_state['Transport'])
+        transport_new = st.selectbox("Consider switching to a better way of transportation: ", options = transportOptions, index = transIndex)
     else:
           transport_new = st.session_state['Transport']
     if all_names[10] in topfeatures:
@@ -407,10 +579,12 @@ def improvement():
     
     Xnew = encoder.transform(data_new)
     prediction_new = model.predict(Xnew)
-    st.write("Your current, monthly Carbon Footprint is:")
+    st.write("If you would apply these change, your new, monthly Carbon Footprint would be:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
     st.header(str(round(prediction_new[0])) + " " + unit.translate(SUB))
+    
+    st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(prediction_new[0])) + " " + unit.translate(SUB)+" per month!")
     
     
 def main():
@@ -435,5 +609,4 @@ def main():
 if __name__ == '__main__':
  #   st.write("App started")
     main()
-    
     
