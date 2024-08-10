@@ -30,7 +30,7 @@ def load_model_and_encoder():
         model_f = pickle.load(f)
     with open('encoder2.pkl', 'rb') as f:
         encoder_f = pickle.load(f)
-    with open('\CFdata.pkl', 'rb') as f:
+    with open('CFdata.pkl', 'rb') as f:
         CFdata_f = pickle.load(f)
     return model_f, encoder_f, CFdata_f
 
