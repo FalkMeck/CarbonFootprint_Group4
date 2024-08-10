@@ -16,6 +16,7 @@ import sklearn
 import numpy as np
 import matplotlib.image as img
 import math
+import plotly.express as px
 
 # st.write(sklearn.__version__)
 
@@ -29,7 +30,9 @@ def load_model_and_encoder():
         model_f = pickle.load(f)
     with open('encoder2.pkl', 'rb') as f:
         encoder_f = pickle.load(f)
-    return model_f, encoder_f
+    with open('\CFdata.pkl', 'rb') as f:
+        CFdata_f = pickle.load(f)
+    return model_f, encoder_f, CFdata_f
 
 @st.cache_resource
 def load_earth_image():
@@ -44,7 +47,7 @@ def load_earth_image():
 #         encoder = pickle.load(encoder_file)
 #     return model, encoder
 
-model, encoder = load_model_and_encoder()
+model, encoder, cfdata = load_model_and_encoder()
 earth = load_earth_image()
 
 # Debug statements to verify the loaded objects
@@ -386,6 +389,18 @@ def results():
     st.header(str(round(prediction[0])) + " " + unit.translate(SUB))
     #st.write(str(round(prediction[0])))
     
+    st.write("This is where that leaves you in comparision to the population:")
+    fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
+    fig.update_layout(
+        xaxis_title='Carbon Emissions (' + unit.translate(SUB)+ ')',
+        yaxis_title='Frequency',
+        bargap=0,
+        template='plotly_dark',
+        showlegend=False
+        )
+    fig.add_vline(x=prediction[0], line_width=3, line_dash="solid", line_color="red")
+    st.plotly_chart(fig, use_container_width=True)
+    
     sequestration_rate = 2100
     gha_earth = 1.63
 
@@ -586,6 +601,17 @@ def improvement():
     
     st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(prediction_new[0])) + " " + unit.translate(SUB)+" per month!")
     
+    fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
+    fig.update_layout(
+        xaxis_title='Carbon Emissions (' + unit.translate(SUB)+ ')',
+        yaxis_title='Frequency',
+        bargap=0,
+        template='plotly_dark',
+        showlegend=False
+        )
+    fig.add_vline(x=prediction_new[0], line_width=3, line_dash="solid", line_color="green")
+    fig.add_vline(x=st.session_state['prediction'], line_width=3, line_dash="dash", line_color="red")
+    st.plotly_chart(fig, use_container_width=True)
     
 def main():
     if 'page' not in st.session_state:
