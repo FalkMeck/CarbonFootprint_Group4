@@ -30,12 +30,17 @@ def load_model_and_encoder():
     return model_f, encoder_f, CFdata_f
 
 @st.cache_resource
-def load_model_and_data():
+def load_model_tree():
     with open('tree.pkl', 'rb') as f:
         model_f = pickle.load(f)
-    with open('CFdata.pkl', 'rb') as f:
-        CFdata_f = pickle.load(f)
-    return model_f, CFdata_f
+    return model_f
+
+@st.cache_resource
+def load_model_lgbm():
+    with open('lgbm.pkl', 'rb') as f:
+        model_f = pickle.load(f)
+
+    return model_f
 
 @st.cache_resource
 def load_earth_image():
@@ -43,7 +48,8 @@ def load_earth_image():
     return image
 
 model_reg,encoder,cfdata = load_model_and_encoder()
-model_dt, cfdata = load_model_and_data()
+model_dt = load_model_tree()
+model_lgbm = load_model_lgbm()
 earth = load_earth_image()
 
 def reg_survey_welcome():
@@ -123,8 +129,7 @@ def reg_survey_demo():
         st.session_state['Sex'] = sex
         st.session_state['Diet'] = diet
         st.session_state['page'] = 'survey_life'
-        st.rerun()
-        
+        st.rerun()        
 
 def reg_survey_life():
     st.title("Carbon Footpint Questionnaire")
@@ -269,8 +274,7 @@ def reg_survey_energy():
         st.rerun()
     if Back:
         st.session_state['page'] = 'survey_life'
-        st.rerun()
-                
+        st.rerun()           
 
 def reg_survey_travel():
     st.title("Carbon Footpint Questionnaire")
@@ -316,7 +320,6 @@ def reg_survey_travel():
     if Back:
          st.session_state['page'] = 'survey_energy'
          st.rerun()
-
 
 def reg_results():
     st.title("Carbon Footpint Questionnaire")
@@ -673,8 +676,7 @@ def dt_survey_demo():
         st.session_state['Sex'] = sex
         st.session_state['Diet'] = diet
         st.session_state['page'] = 'survey_life'
-        st.rerun()
-        
+        st.rerun()    
 
 def dt_survey_life():
     st.title("Carbon Footpint Questionnaire")
@@ -827,7 +829,6 @@ def dt_survey_energy():
         st.session_state['page'] = 'survey_life'
         st.rerun()
                 
-
 def dt_survey_travel():
     st.title("Carbon Footpint Questionnaire")
     st.header("Travelling")
@@ -880,7 +881,6 @@ def dt_survey_travel():
     if Back:
          st.session_state['page'] = 'survey_energy'
          st.rerun()
-
 
 def dt_results():
     st.title("Carbon Footpint Questionnaire")
@@ -1224,6 +1224,450 @@ def dt_improvement():
     fig.add_vline(x=prediction_new[0], line_width=3, line_dash="solid", line_color="green")
     fig.add_vline(x=st.session_state['prediction'], line_width=3, line_dash="dash", line_color="red")
     st.plotly_chart(fig, use_container_width=True)
+   
+
+def lgbm_survey_welcome():
+    st.title("Carbon Footprint Questionnaire")
+
+    st.write("""
+             Hello you there, 
+             
+             this questionnaire helps you to figure out,
+             what your current, monthly Carbon Footprint is.
+             
+             After that it will show you your main areas of concern.
+             You can play around with how improving in these areas would reduce your Carbon Footprint.
+             
+             Thank you for caring for the environment!
+             """)
+    
+    if st.button("Start"):
+        st.session_state['page'] = 'survey_all'
+        st.rerun()
+
+def lgbm_survey_all():
+    st.title("Carbon Footprint Questionnaire")
+    st.header("10 Questions")
+    st.write("This short version of the questionnaire, only has 10 questions.")
+    
+    # QUESTION FOR SEX
+    sexOptions = ["female", "male"] # define options
+    if 'Sex' in st.session_state: # check if question has been nswered yet
+        default = sexOptions.index(st.session_state['Sex']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    sex = st.radio("Sex:", options = sexOptions, horizontal = True, index = default)
+    
+    # QUESTION FOR HEIGHT
+    if 'Height_tmp' in st.session_state: # check if previously answered
+        default = st.session_state['Height_tmp'] # use previous value
+    else:
+        default = 170 # use default
+    height = st.number_input("Height (in cm):", min_value = 50, max_value = 270, value = default)
+    
+    # QUESION FOR WEIGHT
+    if 'Weight_tmp' in st.session_state: # check if previously answered
+        default = st.session_state['Weight_tmp'] # use previous answer
+    else:
+        default = 70 # use default
+    weight = st.number_input("Weight (in kg):", min_value = 30, max_value = 600, value = default)
+    
+    # QUESTION FOR Groceries
+    if 'Monthly_Grocery_Bill' in st.session_state: # check if previously answered
+        default = st.session_state['Monthly_Grocery_Bill'] # use previous value
+    else:
+        default = 1 # use default
+    groceries = st.number_input("How much do you spend on groceries in a month (in Euro)?", min_value = 0, max_value = int(1e6), value = default)
+    
+    # QUESTION FOR New CLothes
+    if 'How_Many_New_Clothes_Monthly' in st.session_state: # check if previously answered
+        default = st.session_state['How_Many_New_Clothes_Monthly'] # use previous value
+    else:
+        default = 1 # use default
+    clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0, max_value = int(1e6), value = default)    
+    
+    # QUESTION FOR Waste Bag Count
+    if 'Waste_Bag_Weekly_Count' in st.session_state: # check if previously answered
+        default = st.session_state['Waste_Bag_Weekly_Count'] # use previous value
+    else:
+        default = 1 # use default
+    wastebag_count = st.number_input("How many bags of waste do you produce per week?", min_value = 0, max_value = int(1e6), value = default)
+   
+    # QUESTION FOR Internet usage
+    if 'How_Long_Internet_Daily_Hour' in st.session_state: # check if previously answered
+        default = st.session_state['How_Long_Internet_Daily_Hour'] # use previous value
+    else:
+        default = 1 # use default
+    internet = st.number_input("How many hours do you use the internet per day?", min_value = 0, max_value = 24, value = default)
+    
+    heatOptions = ["coal", "electricity", "natural gas", "wood"] # define options
+    if 'Heating_Energy_Source' in st.session_state: # check if question has been nswered yet
+        default = heatOptions.index(st.session_state['Heating_Energy_Source']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    energy = st.radio("What is your main source of engery for heating?", options = heatOptions, horizontal = True, index = default)
+    
+    # QUESTION FOR main means of transportations
+    transOptions = ["walk/bicycle", "public transport", "car (type: petrol)", "car (type: diesel)", "car (type: electric)", "car (type: hybrid)", "car (type: lpg)"]# define options
+    if 'Transport' in st.session_state: # check if question has been nswered yet
+        default = transOptions.index(st.session_state['Transport']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    transport = st.radio("What is your main method of transportation?", options = transOptions, horizontal = False, index = default)
+   
+    # QUESTION FOR distance traveled monthly
+    if 'Vehicle_Monthly_Distance_Km' in st.session_state: # check if previously answered
+        default = st.session_state['Vehicle_Monthly_Distance_Km'] # use previous value
+    else:
+        default = 1 # use default
+    km =  st.number_input("How many kilometers do you travel per month?", min_value = 0, max_value = int(1e6), value = default)
+   
+    # QUESTION FOR Frequency of plane usage
+    planeOptions = ["never", "rarely", "frequently", "very frequently"] # define options
+    if 'Frequency_of_Traveling_by_Air' in st.session_state: # check if question has been nswered yet
+        default = planeOptions.index(st.session_state['Frequency_of_Traveling_by_Air']) # use previous index of answer
+    else:
+        default = 0 # default is using first answer
+    plane = st.radio("How often did you travel by plane in the last month?", options = planeOptions, horizontal = True, index = default)
+
+    
+  
+    col1, col2, col3 = st.columns(3)
+    with col3:
+       Next = st.button("Show Results")
+    
+    if Next:
+        
+        for s in sexOptions:
+            st.session_state['Sex_' + s] = 1 if s == sex else 0
+         
+        st.session_state['How_Many_New_Clothes_Monthly'] = clothes
+        st.session_state['Vehicle_Monthly_Distance_Km'] = km
+        st.session_state['Waste_Bag_Weekly_Count'] = wastebag_count
+        st.session_state['Monthly_Grocery_Bill'] = groceries
+        st.session_state['How_Long_Internet_Daily_Hour'] = internet
+
+        for t in transOptions:
+            st.session_state['Transport_Vehicle_Type_' + t] = 1 if t == transport else 0
+            
+        for f in planeOptions:
+            st.session_state['Frequency_of_Traveling_by_Air_' + f] = 1 if f == plane else 0
+            
+        for h in heatOptions:
+            st.session_state['Heating_Energy_Source_' + h] = 1 if h == energy else 0
+        
+        bmi = weight/((height/100)**2)
+    
+        st.session_state['Body_Type_overweight'] = 0; st.session_state['Body_Type_obese'] = 0;
+        st.session_state['Body_Type_underweight'] = 0; st.session_state['Body_Type_normal'] = 0
+        if bmi >= 30 :
+           st.session_state['Body_Type_obese'] = 1
+        elif bmi >= 25:
+            st.session_state['Body_Type_overweight'] = 1
+        elif bmi >= 18.5:
+            st.session_state['Body_Type_normal'] = 1
+        else:
+            st.session_state['Body_Type_underweight'] = 1
+       
+        
+        st.session_state['Height_tmp'] = height
+        st.session_state['Weight_tmp'] = weight
+        
+        st.session_state['page'] = 'results'
+        st.rerun(     
+
+def lgbm_results():
+    st.title("Carbon Footpint Questionnaire")
+    st.header("Results")
+    
+    all_names = ['Sex_female', 
+ 'Sex_male',
+ 'How_Many_New_Clothes_Monthly',
+ 'Vehicle_Monthly_Distance_Km',
+ 'Waste_Bag_Weekly_Count',
+ 'Monthly_Grocery_Bill',
+ 'How_Long_Internet_Daily_Hour',
+ 'Transport_Vehicle_Type_electric',
+ 'Transport_Vehicle_Type_lpg',
+ 'Transport_Vehicle_Type_hybrid',
+ 'Transport_Vehicle_Type_diesel',
+ 'Transport_Vehicle_Type_petrol',
+ 'Transport_Vehicle_Type_walkbicycle',
+ 'Transport_Vehicle_Type_public',
+ 'Frequency_of_Traveling_by_Air_frequently',
+ 'Frequency_of_Traveling_by_Air_rarely',
+ 'Frequency_of_Traveling_by_Air_never',
+ 'Frequency_of_Traveling_by_Air_very_frequently',
+ 'Heating_Energy_Source_coal',
+ 'Heating_Energy_Source_natural_gas',
+ 'Heating_Energy_Source_wood',
+ 'Heating_Energy_Source_electricity',
+ 'Body_Type_overweight',
+ 'Body_Type_obese',
+ 'Body_Type_underweight',
+ 'Body_Type_normal']
+    
+    data = pd.DataFrame([[st.session_state['Sex_female'],
+     st.session_state['Sex_male'],
+     st.session_state['How_Many_New_Clothes_Monthly'],
+     st.session_state['Vehicle_Monthly_Distance_Km'],
+     st.session_state['Waste_Bag_Weekly_Count'],
+     st.session_state['Monthly_Grocery_Bill'],
+     st.session_state['How_Long_Internet_Daily_Hour'],
+     
+     st.session_state['Transport_Vehicle_Type_car (type: electric)'],
+     st.session_state['Transport_Vehicle_Type_car (type: lpg)'],
+     st.session_state['Transport_Vehicle_Type_car (type: hybrid)'],
+     st.session_state['Transport_Vehicle_Type_car (type: diesel)'],
+     st.session_state['Transport_Vehicle_Type_car (type: petrol)'],
+     st.session_state['Transport_Vehicle_Type_walk/bicycle'],
+     st.session_state['Transport_Vehicle_Type_public transport'],
+     
+     st.session_state['Frequency_of_Traveling_by_Air_frequently'],
+     st.session_state['Frequency_of_Traveling_by_Air_rarely'],
+     st.session_state['Frequency_of_Traveling_by_Air_never'],
+     st.session_state['Frequency_of_Traveling_by_Air_very frequently'],
+   
+     st.session_state['Heating_Energy_Source_coal'],
+     st.session_state['Heating_Energy_Source_natural gas'],
+     st.session_state['Heating_Energy_Source_wood'],
+     st.session_state['Heating_Energy_Source_electricity'],
+     
+     st.session_state['Body_Type_overweight'],
+     st.session_state['Body_Type_obese'],
+     st.session_state['Body_Type_underweight'],
+     st.session_state['Body_Type_normal']]], columns=all_names)
+    
+    X = data
+    st.write(X.shape)
+    
+    prediction = model_lgbm.predict(X)
+    st.write("Your current, monthly Carbon Footprint is:")
+    unit = "kgCO2e"
+    SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+    st.header(str(round(prediction[0])) + " " + unit.translate(SUB))
+    #st.write(str(round(prediction[0])))
+    
+    st.write("This is where that leaves you in comparision to the population:")
+    fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
+    fig.update_layout(
+        xaxis_title='Carbon Emissions (' + unit.translate(SUB)+ ')',
+        yaxis_title='Frequency',
+        bargap=0,
+        template='plotly_dark',
+        showlegend=False
+        )
+    fig.add_vline(x=prediction[0], line_width=3, line_dash="solid", line_color="red")
+    st.plotly_chart(fig, use_container_width=True)
+    
+    sequestration_rate = 2100
+    gha_earth = 1.63
+
+    earths = round(((prediction[0]*12)/sequestration_rate)/gha_earth,3)
+    earths_max = math.ceil(earths)
+
+    earthsImage = []
+    for i in range(earths_max):
+        if i == 0:
+            earthsImage = earth
+        else:
+            earthsImage = np.append(earthsImage, earth, 1)
+    
+    st.write("You woud need")
+    st.header(str(earths) + " Earths to live")
+    
+    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto")
+    
+    
+    if st.button("Show How to Improve"):
+         st.session_state['prediction'] = prediction[0]
+         st.session_state['dataX'] = X
+         st.session_state['page'] ='improve'
+         st.rerun()
+    
+def lgbm_improvement():
+    
+    dataX = st.session_state['dataX']
+    X_weighted = np.multiply(dataX.iloc[0], model_lgbm.feature_importances_)
+    Xsorted = np.sort(X_weighted)
+    features = model_lgbm.feature_name_
+
+    n = 5
+    topValues = Xsorted[(-1*n):]
+    topfeatures = []
+    for i in topValues:
+        ind = np.where(X_weighted == i)[0].astype(int)[0]
+        quest = features[ind]
+        topfeatures.append(quest)
+        
+        all_names = ['Sex_female', 
+     'Sex_male',
+     'How_Many_New_Clothes_Monthly',
+     'Vehicle_Monthly_Distance_Km',
+     'Waste_Bag_Weekly_Count',
+     'Monthly_Grocery_Bill',
+     'How_Long_Internet_Daily_Hour',
+     'Transport_Vehicle_Type_electric',
+     'Transport_Vehicle_Type_lpg',
+     'Transport_Vehicle_Type_hybrid',
+     'Transport_Vehicle_Type_diesel',
+     'Transport_Vehicle_Type_petrol',
+     'Transport_Vehicle_Type_walkbicycle',
+     'Transport_Vehicle_Type_public',
+     'Frequency_of_Traveling_by_Air_frequently',
+     'Frequency_of_Traveling_by_Air_rarely',
+     'Frequency_of_Traveling_by_Air_never',
+     'Frequency_of_Traveling_by_Air_very_frequently',
+     'Heating_Energy_Source_coal',
+     'Heating_Energy_Source_natural_gas',
+     'Heating_Energy_Source_wood',
+     'Heating_Energy_Source_electricity',
+     'Body_Type_overweight',
+     'Body_Type_obese',
+     'Body_Type_underweight',
+     'Body_Type_normal']
+    
+    st.title("Carbon Footpint Questionnaire")
+    
+    st.write("Your current, monthly Carbon Footprint before applying any changes is:")
+    unit = "kgCO2e"
+    SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+    st.header(str(round(st.session_state['prediction'])) + " " + unit.translate(SUB))
+
+    st.header("How to improve your score:")
+ 
+    
+    if any(e in all_names[14:18] for e in topfeatures):
+        plane_options = ["never", "rarely", "frequently", "very frequently"]
+        prev_plane_options = [st.session_state['Frequency_of_Traveling_by_Air_never'], st.session_state['Frequency_of_Traveling_by_Air_rarely'], st.session_state['Frequency_of_Traveling_by_Air_frequently'], st.session_state['Frequency_of_Traveling_by_Air_very frequently']]
+        prev_plane = [s for i, s in zip(prev_plane_options, plane_options) if i == 1]
+        airtravel_new = st.select_slider("Consider travelling less by plane: ", options = plane_options, value = prev_plane)
+    else: 
+        plane_options = ["never", "rarely", "frequently", "very frequently"]
+        prev_plane_options = [st.session_state['Frequency_of_Traveling_by_Air_never'], st.session_state['Frequency_of_Traveling_by_Air_rarely'], st.session_state['Frequency_of_Traveling_by_Air_frequently'], st.session_state['Frequency_of_Traveling_by_Air_very frequently']]
+        prev_plane = [s for i, s in zip(prev_plane_options, plane_options) if i == 1]
+        airtravel_new = prev_plane[0]
+    plane_new = {}
+    for fly in plane_options:
+        plane_new[fly] = 1 if fly == airtravel_new else 0
+   
+    
+   
+    if  any(e in all_names[7:14] for e in topfeatures):
+        heat_options = ["electricity", "wood", "natural gas", "coal"]
+        prev_heat_options = [st.session_state['Heating_Energy_Source_electricity'],st.session_state['Heating_Energy_Source_wood'],
+                             st.session_state['Heating_Energy_Source_natural gas'],st.session_state['Heating_Energy_Source_coal']]
+        prev_heat = [s for i, s in zip(prev_heat_options, heat_options) if i == 1]
+        heating_new = st.selectbox("Consider switching to a greener energy source: ", options = heat_options, value = prev_heat[0])
+    else:
+        heat_options = ["electricity", "wood", "natural gas", "coal"]
+        prev_heat_options = [st.session_state['Heating_Energy_Source_electricity'],st.session_state['Heating_Energy_Source_wood'],
+                             st.session_state['Heating_Energy_Source_natural gas'],st.session_state['Heating_Energy_Source_coal']]
+        prev_heat = [s for i, s in zip(prev_heat_options, heat_options) if i == 1]
+        heating_new = prev_heat[0]
+    heat_new = {}
+    for hot in heat_options:
+        heat_new[hot] = 1 if hot == heating_new else 0
+    
+
+    if any(e in all_names[18:22] for e in topfeatures):
+        trans_options =  ["walk/bicycle", "public transport", "car (type: petrol)", "car (type: diesel)", "car (type: electric)", "car (type: hybrid)", "car (type: lpg)"]
+        prev_trans_options = [st.session_state['Transport_Vehicle_Type_walk/bicycle'], st.session_state['Transport_Vehicle_Type_public transport'],
+                              st.session_state['Transport_Vehicle_Type_car (type: petrol)'],st.session_state['Transport_Vehicle_Type_car (type: diesel)'],
+                              st.session_state['Transport_Vehicle_Type_car (type: electric)'],st.session_state['Transport_Vehicle_Type_car (type: hybrid)'],
+                              st.session_state['Transport_Vehicle_Type_car (type: lpg)']]
+        prev_trans = [s for i, s in zip(prev_trans_options, trans_options) if i == 1]
+        transport_new = st.selectbox("Consider switching to a better way of transportation: ", options = trans_options, index = prev_trans[0])
+    else:
+        trans_options =  ["walk/bicycle", "public transport", "car (type: petrol)", "car (type: diesel)", "car (type: electric)", "car (type: hybrid)", "car (type: lpg)"]
+        prev_trans_options = [st.session_state['Transport_Vehicle_Type_walk/bicycle'], st.session_state['Transport_Vehicle_Type_public transport'],
+                              st.session_state['Transport_Vehicle_Type_car (type: petrol)'],st.session_state['Transport_Vehicle_Type_car (type: diesel)'],
+                              st.session_state['Transport_Vehicle_Type_car (type: electric)'],st.session_state['Transport_Vehicle_Type_car (type: hybrid)'],
+                              st.session_state['Transport_Vehicle_Type_car (type: lpg)']]
+        prev_trans = [s for i, s in zip(prev_trans_options, trans_options) if i == 1]
+        transport_new = prev_trans[0]
+    trans_new = {}
+    for car in trans_options:
+      trans_new[car] = 1 if car == transport_new else 0
+    
+
+    if all_names[5] in topfeatures:
+        groceries_new = st.slider("Consider buying less groceries: ", 0, st.session_state['Monthly_Grocery_Bill'], st.session_state['Monthly_Grocery_Bill'])
+    else:    
+        groceries_new = st.session_state['Monthly_Grocery_Bill']
+ 
+    if all_names[3] in topfeatures:
+        km_new = st.slider("Consider to travel less: ", 0, st.session_state['Vehicle_Monthly_Distance_Km'], st.session_state['Vehicle_Monthly_Distance_Km'])
+    else:
+       km_new = st.session_state['Vehicle_Monthly_Distance_Km']
+   
+    if all_names[4] in topfeatures:
+        wastebag_count_new = st.slider("Consider producing less waste: ", 0, st.session_state['Waste_Bag_Weekly_Count'], st.session_state['Waste_Bag_Weekly_Count'])
+    else:
+        wastebag_count_new = st.session_state['Waste_Bag_Weekly_Count']
+   
+    if all_names[2] in topfeatures:
+        clothes_new = st.slider("Consider buying less new clothes: ", 0, st.session_state['How_Many_New_Clothes_Monthly'], st.session_state['How_Many_New_Clothes_Monthly'])
+    else:
+        clothes_new = st.session_state['How_Many_New_Clothes_Monthly']
+   
+    if all_names[6] in topfeatures:
+        internet_new = st.slider("Consider using the internet less: ", 0, st.session_state['How_Long_Internet_Daily_Hour'], st.session_state['How_Long_Internet_Daily_Hour'])
+    else:
+        internet_new = st.session_state['How_Long_Internet_Daily_Hour']
+
+        
+
+    data_new = pd.DataFrame([[st.session_state['Sex_female'],
+     st.session_state['Sex_male'],
+     
+     clothes_new,
+     km_new,
+     wastebag_count_new,
+     groceries_new,
+     internet_new,
+     
+     trans_new['car (type: electric)'],
+     trans_new['car (type: lpg)'],
+     trans_new['car (type: hybrid)'],
+     trans_new['car (type: diesel)'],
+     trans_new['car (type: petrol)'],
+     trans_new['walk/bicycle'],
+     trans_new['public transport'],
+     
+     plane_new['frequently'],
+     plane_new['rarely'],
+     plane_new['never'],
+     plane_new['very frequently'],
+   
+     heat_new['coal'],
+     heat_new['natural gas'],
+     heat_new['wood'],
+     heat_new['electricity'],
+     st.session_state['Body_Type_overweight'],
+     st.session_state['Body_Type_obese'],
+     st.session_state['Body_Type_underweight'],
+     st.session_state['Body_Type_normal']]], columns=all_names)
+    
+    prediction_new = model_lgbm.predict(data_new)
+    st.write("If you would apply these change, your new, monthly Carbon Footprint would be:")
+    unit = "kgCO2e"
+    SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+    st.header(str(round(prediction_new[0])) + " " + unit.translate(SUB))
+    
+    st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(prediction_new[0])) + " " + unit.translate(SUB)+" per month!")
+    
+    fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
+    fig.update_layout(
+        xaxis_title='Carbon Emissions (' + unit.translate(SUB)+ ')',
+        yaxis_title='Frequency',
+        bargap=0,
+        template='plotly_dark',
+        showlegend=False
+        )
+    fig.add_vline(x=prediction_new[0], line_width=3, line_dash="solid", line_color="green")
+    fig.add_vline(x=st.session_state['prediction'], line_width=3, line_dash="dash", line_color="red")
+    st.plotly_chart(fig, use_container_width=True)
     
 def selction_tool():
     st.header("Please select the Version of the App you would like to do:")
@@ -1231,17 +1675,19 @@ def selction_tool():
     with col1:
       Regression = st.button("Regression")
     with col2:
+        RegShort = st.button("Regression (Short)")
+    with col3:
        DecisionTree = st.button("Decision Tree")
        
     if Regression:
         st.session_state['model'] = 'regression'
         st.session_state['page'] = 'survey_welcome'
+    elif RegShort:
+        st.session_state['model'] = 'regShort'
+        st.session_state['page'] = 'survey_welcome'
     elif DecisionTree:
         st.session_state['model'] = 'decision_tree'
-        st.session_state['page'] = 'survey_welcome'
-        
-        
-        
+        st.session_state['page'] = 'survey_welcome'        
         
 def main():
     
@@ -1264,9 +1710,19 @@ def main():
         elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'survey_travel':
             reg_survey_travel()
         elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'results':
-            reg_results()
+            lgbm_results()
         elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'improve':
             reg_improvement()
+         
+        elif st.session_state['model'] == 'regShort' and st.session_state['page'] == 'survey_welcome':
+            lgbm_survey_welcome()
+        elif st.session_state['model'] == 'regShort' and st.session_state['page'] == 'survey_all':
+            lgbm_survey_all()
+        elif st.session_state['model'] == 'regShort' and st.session_state['page'] == 'results':
+            reg_results()
+        elif st.session_state['model'] == 'regShort' and st.session_state['page'] == 'improve':
+            lgbm_improvement()    
+         
         elif st.session_state['model'] == 'decision_tree' and st.session_state['page'] == 'survey_welcome':
             dt_survey_welcome()
         elif st.session_state['model'] == 'decision_tree' and st.session_state['page'] == 'survey_demo':
