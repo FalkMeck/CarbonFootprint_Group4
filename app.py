@@ -683,7 +683,6 @@ def dt_survey_life():
     st.title("Carbon Footpint Questionnaire")
     st.header("Daily life")
     
-    st.write(st.session_state)
     
     st.write("Now some questions about your day to day activties, expenses and the waste you produce.")
     
@@ -782,7 +781,6 @@ def dt_survey_life():
 def dt_survey_energy():
     st.title("Carbon Footpint Questionnaire")
     st.header("Energy efficiency")
-    st.write(st.session_state)
     
     st.write("How enegery efficient are you already?")
     
@@ -834,7 +832,6 @@ def dt_survey_travel():
     st.title("Carbon Footpint Questionnaire")
     st.header("Travelling")
     
-    st.write(st.session_state)
     st.write("Lastly, some question about yout means of getting around and how much you travel.")
     
     # QUESTION FOR main means of transportations
