@@ -47,15 +47,15 @@ earth = load_earth_image()
 
 col1, col2, col3 = st.columns(3)
 with col1:
-   Regression = st.button("Regression")
+   st.session_state['Model_Regression'] = st.button("Regression")
 with col2:
-   DecisionTree = st.button("Decision Tree")
+   st.session_state['Model_DK'] = st.button("Decision Tree")
 
-if Regression:
+if st.session_state['Model_Regression']:
     import app_regression
     model, encoder, cfdata = load_model_and_encoder()
     app_regression.main()
-if DecisionTree:
+if st.session_state['Model_DK'] :
     import app_decisionTree
     model, cfdata = load_model_and_data()
     app_decisionTree.main()
