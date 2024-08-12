@@ -1374,8 +1374,11 @@ def lgbm_survey_all():
         st.session_state['Weight_tmp'] = weight
         
         st.session_state['page'] = 'results'
-        st.rerun(     
-
+        st.rerun()    
+            
+            
+            
+            
 def lgbm_results():
     st.title("Carbon Footpint Questionnaire")
     st.header("Results")
