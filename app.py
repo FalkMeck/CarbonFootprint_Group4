@@ -55,7 +55,25 @@ if __name__ == '__main__':
     if Regression:
         import app_regression
         model, encoder, cfdata = load_model_and_encoder()
-        app_regression.main()
+        if 'page' not in st.session_state:
+            st.session_state['page'] = 'survey_welcome'  
+
+        if st.session_state['page'] == 'survey_welcome':
+            app_regression.survey_welcome()
+        elif st.session_state['page'] == 'survey_demo':
+            app_regression.survey_demo()
+        elif st.session_state['page'] == 'survey_life':
+            app_regression.survey_life()
+        elif st.session_state['page'] == 'survey_energy':
+            app_regression.survey_energy()
+        elif st.session_state['page'] == 'survey_travel':
+            app_regression.survey_travel()
+        elif st.session_state['page'] == 'results':
+            app_regression.results()
+        elif st.session_state['page'] == 'improve':
+            app_regression.improvement()
+        
+        
     if DecisionTree:
         model, cfdata = load_model_and_data()
         import app_decisionTree

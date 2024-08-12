@@ -613,24 +613,24 @@ def improvement():
     fig.add_vline(x=st.session_state['prediction'], line_width=3, line_dash="dash", line_color="red")
     st.plotly_chart(fig, use_container_width=True)
     
-def main():
-    if 'page' not in st.session_state:
-        st.session_state['page'] = 'survey_welcome'  
+# def main():
+#     if 'page' not in st.session_state:
+#         st.session_state['page'] = 'survey_welcome'  
 
-    if st.session_state['page'] == 'survey_welcome':
-        survey_welcome()
-    elif st.session_state['page'] == 'survey_demo':
-        survey_demo()
-    elif st.session_state['page'] == 'survey_life':
-        survey_life()
-    elif st.session_state['page'] == 'survey_energy':
-        survey_energy()
-    elif st.session_state['page'] == 'survey_travel':
-        survey_travel()
-    elif st.session_state['page'] == 'results':
-        results()
-    elif st.session_state['page'] == 'improve':
-        improvement()
+#     if st.session_state['page'] == 'survey_welcome':
+#         survey_welcome()
+#     elif st.session_state['page'] == 'survey_demo':
+#         survey_demo()
+#     elif st.session_state['page'] == 'survey_life':
+#         survey_life()
+#     elif st.session_state['page'] == 'survey_energy':
+#         survey_energy()
+#     elif st.session_state['page'] == 'survey_travel':
+#         survey_travel()
+#     elif st.session_state['page'] == 'results':
+#         results()
+#     elif st.session_state['page'] == 'improve':
+#         improvement()
 
 # if __name__ == '__main__':
 #  #   st.write("App started")
