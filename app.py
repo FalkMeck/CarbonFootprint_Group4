@@ -13,6 +13,7 @@ import numpy as np
 import matplotlib.image as img
 import math
 import plotly.express as px
+import lightgbm as lgb
 
 # st.write(sklearn.__version__)
 
