@@ -6,13 +6,13 @@ Created on Mon Aug 12 13:58:57 2024
 """
 
 import streamlit as st
-import pandas as pd
+#import pandas as pd
 import pickle
 import sklearn
-import numpy as np
+#import numpy as np
 import matplotlib.image as img
-import math
-import plotly.express as px
+#import math
+#import plotly.express as px
 
 # st.write(sklearn.__version__)
 

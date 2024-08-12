@@ -9,14 +9,14 @@ Created on Sun Jul  7 13:08:24 2024
 #This Script is the first attempt at using StreamLit to produce the questionnaire
 #in an interactive format.
 #"""
-# import streamlit as st
-# import pandas as pd
-# import pickle
-# import sklearn
-# import numpy as np
+import streamlit as st
+import pandas as pd
+#import pickle
+import sklearn
+import numpy as np
 # import matplotlib.image as img
-# import math
-# import plotly.express as px
+import math
+import plotly.express as px
 
 # st.write(sklearn.__version__)
 
