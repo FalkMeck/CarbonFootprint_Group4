@@ -1244,8 +1244,7 @@ def selction_tool():
         
         
 def main():
-
-    if st.session_state['model_regression']:
+    
         if 'page' not in st.session_state:
             st.session_state['page'] = 'decision_page'  
             
