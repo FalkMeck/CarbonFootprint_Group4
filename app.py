@@ -6,13 +6,13 @@ Created on Mon Aug 12 13:58:57 2024
 """
 
 import streamlit as st
-#import pandas as pd
+import pandas as pd
 import pickle
 import sklearn
-#import numpy as np
+import numpy as np
 import matplotlib.image as img
-#import math
-#import plotly.express as px
+import math
+import plotly.express as px
 
 # st.write(sklearn.__version__)
 
@@ -44,39 +44,20 @@ def load_earth_image():
 
 earth = load_earth_image()
 
-if __name__ == '__main__':
-    
-    col1, col2, col3 = st.columns(3)
-    with col3:
-       Regression = st.button("Regression")
-    with col1:
-       DecisionTree = st.button("Decision Tree")
-    
-    if Regression:
-        import app_regression
-        model, encoder, cfdata = load_model_and_encoder()
-        if 'page' not in st.session_state:
-            st.session_state['page'] = 'survey_welcome'  
 
-        if st.session_state['page'] == 'survey_welcome':
-            app_regression.survey_welcome()
-        elif st.session_state['page'] == 'survey_demo':
-            app_regression.survey_demo()
-        elif st.session_state['page'] == 'survey_life':
-            app_regression.survey_life()
-        elif st.session_state['page'] == 'survey_energy':
-            app_regression.survey_energy()
-        elif st.session_state['page'] == 'survey_travel':
-            app_regression.survey_travel()
-        elif st.session_state['page'] == 'results':
-            app_regression.results()
-        elif st.session_state['page'] == 'improve':
-            app_regression.improvement()
-        
-        
-    if DecisionTree:
-        model, cfdata = load_model_and_data()
-        import app_decisionTree
-        app_decisionTree.main()
+col1, col2, col3 = st.columns(3)
+with col1:
+   Regression = st.button("Regression")
+with col2:
+   DecisionTree = st.button("Decision Tree")
+
+if Regression:
+    import app_regression
+    model, encoder, cfdata = load_model_and_encoder()
+    app_regression.main()
+if DecisionTree:
+    import app_decisionTree
+    model, cfdata = load_model_and_data()
+    app_decisionTree.main()
 #  #   st.write("App started")
 #     main()

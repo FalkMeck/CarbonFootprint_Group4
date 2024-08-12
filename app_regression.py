@@ -11,10 +11,10 @@ Created on Sun Jul  7 13:08:24 2024
 #"""
 import streamlit as st
 import pandas as pd
-#import pickle
+import pickle
 import sklearn
 import numpy as np
-# import matplotlib.image as img
+import matplotlib.image as img
 import math
 import plotly.express as px
 
@@ -24,20 +24,20 @@ import plotly.express as px
 #LOCAL
 #streamlit run D:\TechLabs\StreamLitApp_Kopie\CarbonFootprint_stApp.py
 # Function to load model and encoder, cached using st.cache_resource
-# @st.cache_resource
-# def load_model_and_encoder():
-#     with open('model2.pkl', 'rb') as f:
-#         model_f = pickle.load(f)
-#     with open('encoder2.pkl', 'rb') as f:
-#         encoder_f = pickle.load(f)
-#     with open('CFdata.pkl', 'rb') as f:
-#         CFdata_f = pickle.load(f)
-#     return model_f, encoder_f, CFdata_f
+@st.cache_resource
+def load_model_and_encoder():
+    with open('model2.pkl', 'rb') as f:
+        model_f = pickle.load(f)
+    with open('encoder2.pkl', 'rb') as f:
+        encoder_f = pickle.load(f)
+    with open('CFdata.pkl', 'rb') as f:
+        CFdata_f = pickle.load(f)
+    return model_f, encoder_f, CFdata_f
 
-# @st.cache_resource
-# def load_earth_image():
-#     image = img.imread('earth.jpg') 
-#     return image
+@st.cache_resource
+def load_earth_image():
+    image = img.imread('earth.jpg') 
+    return image
 
 # GitHub
 # def load_model_and_encoder():
@@ -47,8 +47,8 @@ import plotly.express as px
 #         encoder = pickle.load(encoder_file)
 #     return model, encoder
 
-# model, encoder, cfdata = load_model_and_encoder()
-# earth = load_earth_image()
+model, encoder, cfdata = load_model_and_encoder()
+earth = load_earth_image()
 
 # Debug statements to verify the loaded objects
 #st.write(f"Model type: {type(model)}")
@@ -613,26 +613,23 @@ def improvement():
     fig.add_vline(x=st.session_state['prediction'], line_width=3, line_dash="dash", line_color="red")
     st.plotly_chart(fig, use_container_width=True)
     
-# def main():
-#     if 'page' not in st.session_state:
-#         st.session_state['page'] = 'survey_welcome'  
+def main():
+    if 'page' not in st.session_state:
+        st.session_state['page'] = 'survey_welcome'  
 
-#     if st.session_state['page'] == 'survey_welcome':
-#         survey_welcome()
-#     elif st.session_state['page'] == 'survey_demo':
-#         survey_demo()
-#     elif st.session_state['page'] == 'survey_life':
-#         survey_life()
-#     elif st.session_state['page'] == 'survey_energy':
-#         survey_energy()
-#     elif st.session_state['page'] == 'survey_travel':
-#         survey_travel()
-#     elif st.session_state['page'] == 'results':
-#         results()
-#     elif st.session_state['page'] == 'improve':
-#         improvement()
+    if st.session_state['page'] == 'survey_welcome':
+        survey_welcome()
+    elif st.session_state['page'] == 'survey_demo':
+        survey_demo()
+    elif st.session_state['page'] == 'survey_life':
+        survey_life()
+    elif st.session_state['page'] == 'survey_energy':
+        survey_energy()
+    elif st.session_state['page'] == 'survey_travel':
+        survey_travel()
+    elif st.session_state['page'] == 'results':
+        results()
+    elif st.session_state['page'] == 'improve':
+        improvement()
 
-# if __name__ == '__main__':
-#  #   st.write("App started")
-#     main()
     
