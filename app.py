@@ -1225,49 +1225,60 @@ def dt_improvement():
     fig.add_vline(x=st.session_state['prediction'], line_width=3, line_dash="dash", line_color="red")
     st.plotly_chart(fig, use_container_width=True)
     
-def main():
+def selction_tool():
+    st.header("Please select the Version of the App you would like to do:")
     col1, col2, col3 = st.columns(3)
     with col1:
-      st.session_state['model_regression'] = st.button("Regression")
+      Regression = st.button("Regression")
     with col2:
-       st.session_state['model_decision_tree'] = st.button("Decision Tree")
+       DecisionTree = st.button("Decision Tree")
+       
+    if Regression:
+        st.session_state['model'] = 'regression'
+        st.session_state['page'] = 'survey_welcome'
+    elif DecisionTree:
+        st.session_state['model'] = 'decision_tree'
+        st.session_state['page'] = 'survey_welcome'
+        
+        
+        
+        
+def main():
 
     if st.session_state['model_regression']:
-        model, encoder, cfdata = load_model_and_encoder()
         if 'page' not in st.session_state:
-            st.session_state['page'] = 'survey_welcome'  
-
-        if st.session_state['page'] == 'survey_welcome':
+            st.session_state['page'] = 'decision_page'  
+            
+        if st.session_state['page'] == 'decision_page':
+            selction_tool()
+            
+        if st.session_state['model'] == 'regression' and st.session_state['page'] == 'survey_welcome':
             reg_survey_welcome()
-        elif st.session_state['page'] == 'survey_demo':
+        elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'survey_demo':
             reg_survey_demo()
-        elif st.session_state['page'] == 'survey_life':
+        elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'survey_life':
             reg_survey_life()
-        elif st.session_state['page'] == 'survey_energy':
+        elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'survey_energy':
             reg_survey_energy()
-        elif st.session_state['page'] == 'survey_travel':
+        elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'survey_travel':
             reg_survey_travel()
-        elif st.session_state['page'] == 'results':
+        elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'results':
             reg_results()
-        elif st.session_state['page'] == 'improve':
+        elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'improve':
             reg_improvement()
-    if st.session_state['model_decision_tree']:
-
-        if 'page' not in st.session_state:
-            st.session_state['page'] = 'survey_welcome'  
-        if st.session_state['page'] == 'survey_welcome':
+        elif st.session_state['model'] == 'decision_tree' and st.session_state['page'] == 'survey_welcome':
             dt_survey_welcome()
-        elif st.session_state['page'] == 'survey_demo':
+        elif st.session_state['model'] == 'decision_tree' and st.session_state['page'] == 'survey_demo':
             dt_survey_demo()
-        elif st.session_state['page'] == 'survey_life':
+        elif st.session_state['model'] == 'decision_tree' and st.session_state['page'] == 'survey_life':
             dt_survey_life()
-        elif st.session_state['page'] == 'survey_energy':
+        elif st.session_state['model'] == 'decision_tree' and st.session_state['page'] == 'survey_energy':
             dt_survey_energy()
-        elif st.session_state['page'] == 'survey_travel':
+        elif st.session_state['model'] == 'decision_tree' and st.session_state['page'] == 'survey_travel':
             dt_survey_travel()
-        elif st.session_state['page'] == 'results':
+        elif st.session_state['model'] == 'decision_tree' and st.session_state['page'] == 'results':
             dt_results()
-        elif st.session_state['page'] == 'improve':
+        elif st.session_state['model'] == 'decision_tree' and st.session_state['page'] == 'improve':
             dt_improvement()
 
 if __name__ == '__main__':
