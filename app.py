@@ -1249,6 +1249,8 @@ def main():
             st.session_state['page'] = 'decision_page'  
             
         if st.session_state['page'] == 'decision_page':
+            if 'model' not in st.session_state:
+                st.session_state['model'] = 'MT'
             selction_tool()
             
         if st.session_state['model'] == 'regression' and st.session_state['page'] == 'survey_welcome':
