@@ -1441,16 +1441,12 @@ def lgbm_results():
      st.session_state['Body_Type_obese'],
      st.session_state['Body_Type_underweight'],
      st.session_state['Body_Type_normal']]], columns=all_names)
-    
-    X = data
-    st.write(X.shape)
-    
-    prediction = model_lgbm.predict(X)
+       
+    prediction = model_lgbm.predict(data)
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
     st.header(str(round(prediction[0])) + " " + unit.translate(SUB))
-    #st.write(str(round(prediction[0])))
     
     st.write("This is where that leaves you in comparision to the population:")
     fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
