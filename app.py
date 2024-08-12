@@ -1714,7 +1714,7 @@ def main():
         elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'survey_travel':
             reg_survey_travel()
         elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'results':
-            lgbm_results()
+            reg_results()
         elif st.session_state['model'] == 'regression' and st.session_state['page'] == 'improve':
             reg_improvement()
          
@@ -1723,7 +1723,7 @@ def main():
         elif st.session_state['model'] == 'regShort' and st.session_state['page'] == 'survey_all':
             lgbm_survey_all()
         elif st.session_state['model'] == 'regShort' and st.session_state['page'] == 'results':
-            reg_results()
+            lgbm_results()
         elif st.session_state['model'] == 'regShort' and st.session_state['page'] == 'improve':
             lgbm_improvement()    
          
