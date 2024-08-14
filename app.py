@@ -1478,7 +1478,7 @@ def lgbm_results():
     
     if st.button("Show How to Improve"):
          st.session_state['prediction'] = prediction[0]
-         st.session_state['dataX'] = X
+         st.session_state['dataX'] = data
          st.session_state['page'] ='improve'
          st.rerun()
     
