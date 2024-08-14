@@ -1502,9 +1502,9 @@ def lgbm_results():
     st.header(str(earths) + " Earths to live")
     
     colWidth = get_width(html=container_width_js)
-    earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
-  
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = earth_width)
+  #  earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
+    st.write(colWidth)
+    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = True)
     
     
     if st.button("Show How to Improve"):
