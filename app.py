@@ -17,6 +17,10 @@ import lightgbm as lgb
 
 # st.write(sklearn.__version__)
 
+st.set_page_config(
+    page_title="Carbon Footprint",
+    page_icon="👣")
+
 ## Create the survey
 #LOCAL
 # Function to load model and encoder, cached using st.cache_resource
@@ -52,6 +56,11 @@ model_reg,encoder,cfdata = load_model_and_encoder()
 model_dt = load_model_tree()
 model_lgbm = load_model_lgbm()
 earth = load_earth_image()
+
+get_width = st.components.v1.declare_component("get_width",url = "")
+def get_image_width():
+    width = get_width()
+    return widthd
 
 def reg_survey_welcome():
     st.title("Carbon Footprint Questionnaire")
@@ -404,8 +413,10 @@ def reg_results():
     st.write("You woud need")
     st.header(str(earths) + " Earths to live")
     
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = int(earths*earth.shape[1]*0.1))
-    
+    earth_width = min(get_image_width(), int(earths*earth.shape[1]*0.1))
+   
+    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = earth_width)
+     
     
     if st.button("Show How to Improve"):
          st.session_state['prediction'] = prediction[0]
@@ -975,7 +986,10 @@ def dt_results():
     st.write("You woud need")
     st.header(str(earths) + " Earths to live")
     
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = int(earths*earth.shape[1]*0.1))
+    
+    earth_width = min(get_image_width(), int(earths*earth.shape[1]*0.1))
+    
+    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = earth_width)
     
     
     if st.button("Show How to Improve"):
@@ -1473,7 +1487,9 @@ def lgbm_results():
     st.write("You woud need")
     st.header(str(earths) + " Earths to live")
     
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto", width = int(earths*earth.shape[1]*0.1))
+    earth_width = min(get_image_width(), int(earths*earth.shape[1]*0.1))
+    
+    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = earth_width)
     
     
     if st.button("Show How to Improve"):
