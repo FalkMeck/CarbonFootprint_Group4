@@ -1473,7 +1473,7 @@ def lgbm_results():
     st.write("You woud need")
     st.header(str(earths) + " Earths to live")
     
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto")
+    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto", width = int(earths*earth.shape[1]))
     
     
     if st.button("Show How to Improve"):
@@ -1671,10 +1671,10 @@ def selction_tool():
     col1, col2, col3 = st.columns(3)
     with col1:
       Regression = st.button("Regression")
-    with col2:
-        RegShort = st.button("Regression (Short)")
     with col3:
-       DecisionTree = st.button("Decision Tree")
+        RegShort = st.button("Regression (Short)")
+  #  with col3:
+   #    DecisionTree = st.button("Decision Tree")
        
     if Regression:
         st.session_state['model'] = 'regression'
@@ -1682,9 +1682,9 @@ def selction_tool():
     elif RegShort:
         st.session_state['model'] = 'regShort'
         st.session_state['page'] = 'survey_welcome'
-    elif DecisionTree:
-        st.session_state['model'] = 'decision_tree'
-        st.session_state['page'] = 'survey_welcome'        
+  #  elif DecisionTree:
+   #     st.session_state['model'] = 'decision_tree'
+    #    st.session_state['page'] = 'survey_welcome'        
         
 def main():
     
