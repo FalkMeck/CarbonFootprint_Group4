@@ -1487,7 +1487,8 @@ def lgbm_results():
     st.write("You woud need")
     st.header(str(earths) + " Earths to live")
     
-    earth_width = min(get_image_width(), int(earths*earth.shape[1]*0.1))
+    colWidth = get_image_width()
+    earth_width = min(colWidth, int(earths*earth.shape[1]*0.1))
     
     st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = earth_width)
     
