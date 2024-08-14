@@ -60,7 +60,7 @@ earth = load_earth_image()
 get_width = st.components.v1.declare_component("get_width",url = "")
 def get_image_width():
     width = get_width()
-    return widthd
+    return width
 
 def reg_survey_welcome():
     st.title("Carbon Footprint Questionnaire")
