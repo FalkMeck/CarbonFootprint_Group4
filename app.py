@@ -57,10 +57,21 @@ model_dt = load_model_tree()
 model_lgbm = load_model_lgbm()
 earth = load_earth_image()
 
-get_width = st.components.v1.declare_component("get_width",url = "")
-def get_image_width():
-    width = get_width()
-    return width
+
+# Declare the custom component to get the width of the image container
+get_width = st.components.v1.declare_component(
+    "get_width",
+    path="."  # Assume you have a local custom component for simplicity
+)
+
+# Custom JavaScript to find the width of the container
+container_width_js = """
+    <script>
+    const imageContainer = document.querySelector(".element-container");
+    const containerWidth = imageContainer.offsetWidth;
+    Streamlit.setComponentValue(containerWidth);
+    </script>
+"""
 
 def reg_survey_welcome():
     st.title("Carbon Footprint Questionnaire")
@@ -413,7 +424,9 @@ def reg_results():
     st.write("You woud need")
     st.header(str(earths) + " Earths to live")
     
-    earth_width = min(get_image_width(), int(earths*earth.shape[1]*0.1))
+    # Render the JS and get the width
+    colWidth = get_width(html=container_width_js)
+    earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
    
     st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = earth_width)
      
@@ -987,8 +1000,9 @@ def dt_results():
     st.header(str(earths) + " Earths to live")
     
     
-    earth_width = min(get_image_width(), int(earths*earth.shape[1]*0.1))
-    
+    colWidth = get_width(html=container_width_js)
+    earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
+   
     st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = earth_width)
     
     
@@ -1487,9 +1501,9 @@ def lgbm_results():
     st.write("You woud need")
     st.header(str(earths) + " Earths to live")
     
-    colWidth = get_image_width()
-    earth_width = min(colWidth, int(earths*earth.shape[1]*0.1))
-    
+    colWidth = get_width(html=container_width_js)
+    earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
+  
     st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = earth_width)
     
     
