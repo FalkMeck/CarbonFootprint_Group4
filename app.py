@@ -58,20 +58,20 @@ model_lgbm = load_model_lgbm()
 earth = load_earth_image()
 
 
-# Declare the custom component to get the width of the image container
-get_width = st.components.v1.declare_component(
-    "get_width",
-    path="."  # Assume you have a local custom component for simplicity
-)
+# # Declare the custom component to get the width of the image container
+# get_width = st.components.v1.declare_component(
+#     "get_width",
+#     path="."  # Assume you have a local custom component for simplicity
+# )
 
-# Custom JavaScript to find the width of the container
-container_width_js = """
-    <script>
-    const imageContainer = document.querySelector(".element-container");
-    const containerWidth = imageContainer.offsetWidth;
-    Streamlit.setComponentValue(containerWidth);
-    </script>
-"""
+# # Custom JavaScript to find the width of the container
+# container_width_js = """
+#     <script>
+#     const imageContainer = document.querySelector(".element-container");
+#     const containerWidth = imageContainer.offsetWidth;
+#     Streamlit.setComponentValue(containerWidth);
+#     </script>
+# """
 
 def reg_survey_welcome():
     st.title("Carbon Footprint Questionnaire")
@@ -425,10 +425,10 @@ def reg_results():
     st.header(str(earths) + " Earths to live")
     
     # Render the JS and get the width
-    colWidth = get_width(html=container_width_js)
-    earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
+  #  colWidth = get_width(html=container_width_js)
+   # earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
    
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = earth_width)
+    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = None)
      
     
     if st.button("Show How to Improve"):
@@ -1000,10 +1000,10 @@ def dt_results():
     st.header(str(earths) + " Earths to live")
     
     
-    colWidth = get_width(html=container_width_js)
-    earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
+ #   colWidth = get_width(html=container_width_js)
+  #  earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
    
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = earth_width)
+    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = None)
     
     
     if st.button("Show How to Improve"):
@@ -1501,10 +1501,10 @@ def lgbm_results():
     st.write("You woud need")
     st.header(str(earths) + " Earths to live")
     
-    colWidth = get_width(html=container_width_js)
+   # colWidth = get_width(html=container_width_js)
   #  earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
-    st.write(colWidth)
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = True)
+   # st.write(colWidth)
+    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = None)
     
     
     if st.button("Show How to Improve"):
