@@ -1473,7 +1473,7 @@ def lgbm_results():
     st.write("You woud need")
     st.header(str(earths) + " Earths to live")
     
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto", width = int(earths*earth.shape[1]))
+    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto", width = int(earths*earth.shape[1]*0.1))
     
     
     if st.button("Show How to Improve"):
