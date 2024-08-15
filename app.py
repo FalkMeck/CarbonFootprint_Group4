@@ -487,7 +487,7 @@ def reg_improvement():
     else:
         diet_new = st.session_state['Diet']
     if all_names[2] in topfeatures:
-        shower_new = st.select_slider("Consider showering less frquently: ", options = ["less frequently", "daily", "twice a day", "more frequently"], value = st.session_state['How_Often_Shower'])
+        shower_new = st.select_slider("Consider showering less frequently: ", options = ["less frequently", "daily", "twice a day", "more frequently"], value = st.session_state['How_Often_Shower'])
     else:
         shower_new = st.session_state['How_Often_Shower']
     if all_names[3] in topfeatures:
@@ -513,23 +513,23 @@ def reg_improvement():
     if all_names[9] in topfeatures:
         transportOptions = ["car (type: electric)", "car (type: hybrid)","public transport","walk/bicycle", "car (type: diesel)",  "car (type: lpg)", "car (type: petrol)"]
         transIndex = transportOptions.index(st.session_state['Transport'])
-        transport_new = st.selectbox("Consider switching to a better way of transportation: ", options = transportOptions, index = transIndex)
+        transport_new = st.selectbox("Consider switching to a environmentally more friendly way of transportation: ", options = transportOptions, index = transIndex)
     else:
           transport_new = st.session_state['Transport']
     if all_names[10] in topfeatures:
-        groceries_new = st.slider("Consider buying less groceries: ", 0.0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1)*1.1
+        groceries_new = st.slider("Consider spending less on groceries (in Euro): ", 0.0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1)*1.1
     else:    
         groceries_new = st.session_state['Monthly_Grocery_Bill']
     if all_names[11] in topfeatures:
-        km_new = st.slider("Consider to travel less: ", 0, st.session_state['Vehicle_Monthly_Distance_Km'], st.session_state['Vehicle_Monthly_Distance_Km'])
+        km_new = st.slider("Consider travelling less (in km): ", 0, st.session_state['Vehicle_Monthly_Distance_Km'], st.session_state['Vehicle_Monthly_Distance_Km'])
     else:
        km_new = st.session_state['Vehicle_Monthly_Distance_Km']
     if all_names[12] in topfeatures:
-        wastebag_count_new = st.slider("Consider producing less waste: ", 0, st.session_state['Waste_Bag_Weekly_Count'], st.session_state['Waste_Bag_Weekly_Count'])
+        wastebag_count_new = st.slider("Consider producing less waste (less bags of waste): ", 0, st.session_state['Waste_Bag_Weekly_Count'], st.session_state['Waste_Bag_Weekly_Count'])
     else:
         wastebag_count_new = st.session_state['Waste_Bag_Weekly_Count']
     if all_names[13] in topfeatures:
-        tvpc_new = st.slider("Consider spending less time infront of the TV/PV: ", 0, st.session_state['How_Long_TV_PC_Daily_Hour'], st.session_state['How_Long_TV_PC_Daily_Hour'])
+        tvpc_new = st.slider("Consider spending less hours infront of the TV/PV: ", 0, st.session_state['How_Long_TV_PC_Daily_Hour'], st.session_state['How_Long_TV_PC_Daily_Hour'])
     else: 
         tvpc_new = st.session_state['How_Long_TV_PC_Daily_Hour']
     if all_names[14] in topfeatures:
@@ -537,7 +537,7 @@ def reg_improvement():
     else:
         clothes_new = st.session_state['How_Many_New_Clothes_Monthly']
     if all_names[15] in topfeatures:
-        internet_new = st.slider("Consider using the internet less: ", 0, st.session_state['How_Long_Internet_Daily_Hour'], st.session_state['How_Long_Internet_Daily_Hour'])
+        internet_new = st.slider("Consider spending less hours on the internet: ", 0, st.session_state['How_Long_Internet_Daily_Hour'], st.session_state['How_Long_Internet_Daily_Hour'])
     else:
         internet_new = st.session_state['How_Long_Internet_Daily_Hour']
         
@@ -1069,7 +1069,7 @@ def dt_improvement():
    
     if all_names[8] in topfeatures:
         questOptions = ["less than daily", "daily", "twice a day", "more frequently"]
-        shower_new = st.select_slider("Consider showering less frquently: ", options = range(len(questOptions)), format_func=questOptions.__getitem__, value = st.session_state['How_Often_Shower'])
+        shower_new = st.select_slider("Consider showering less frequently: ", options = range(len(questOptions)), format_func=questOptions.__getitem__, value = st.session_state['How_Often_Shower'])
     else:
         shower_new = st.session_state['How_Often_Shower']
     
@@ -1087,7 +1087,7 @@ def dt_improvement():
   
     if all_names[11] in topfeatures:
         questOptions = ["small", "medium", "large", "extra large"]
-        wastebag_size_new = st.select_slider("Consider smaller waste bags: ",  options = range(len(questOptions)), format_func=questOptions.__getitem__, value = st.session_state['Waste_Bag_Size'])
+        wastebag_size_new = st.select_slider("Consider using smaller waste bags: ",  options = range(len(questOptions)), format_func=questOptions.__getitem__, value = st.session_state['Waste_Bag_Size'])
     else: 
         wastebag_size_new = st.session_state['Waste_Bag_Size']
    
@@ -1123,7 +1123,7 @@ def dt_improvement():
                               st.session_state['Transport_hybrid'],
                               st.session_state['Transport_lpg']]
         prev_trans = [s for i, s in zip(prev_trans_options, trans_options) if i == 1]
-        transport_new = st.selectbox("Consider switching to a better way of transportation: ", options = trans_options, index = prev_trans[0])
+        transport_new = st.selectbox("Consider switching to a environmentally more friendly way of transportation: ", options = trans_options, index = prev_trans[0])
     else:
         trans_options = ['walk/bicycle', 'public', 'petrol', 'diesel', 'electric', 'hybrid', 'lpg']
         prev_trans_options = [st.session_state['Transport_walk/bicycle'],st.session_state['Transport_public'],st.session_state['Transport_petrol'],st.session_state['Transport_diesel'],st.session_state['Transport_electric'],st.session_state['Transport_hybrid'],st.session_state['Transport_lpg']]
@@ -1138,19 +1138,19 @@ def dt_improvement():
         private_new = 0
     
     if all_names[0] in topfeatures:
-        groceries_new = st.slider("Consider buying less groceries: ", 0.0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1) *1.1
+        groceries_new = st.slider("Consider spending less on groceries (in Euro): ", 0.0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1) *1.1
     else:    
         groceries_new = st.session_state['Monthly_Grocery_Bill']
     if all_names[1] in topfeatures:
-        km_new = st.slider("Consider to travel less: ", 0, st.session_state['Vehicle_Monthly_Distance_Km'], st.session_state['Vehicle_Monthly_Distance_Km'])
+        km_new = st.slider("Consider travelling less (in km): ", 0, st.session_state['Vehicle_Monthly_Distance_Km'], st.session_state['Vehicle_Monthly_Distance_Km'])
     else:
         km_new = st.session_state['Vehicle_Monthly_Distance_Km']
     if all_names[2] in topfeatures:
-        wastebag_count_new = st.slider("Consider producing less waste: ", 0, st.session_state['Waste_Bag_Weekly_Count'], st.session_state['Waste_Bag_Weekly_Count'])
+        wastebag_count_new = st.slider("Consider producing less waste (less bags of waste): ", 0, st.session_state['Waste_Bag_Weekly_Count'], st.session_state['Waste_Bag_Weekly_Count'])
     else:
         wastebag_count_new = st.session_state['Waste_Bag_Weekly_Count']
     if all_names[3] in topfeatures:
-        tvpc_new = st.slider("Consider spending less time infront of the TV/PV: ", 0, st.session_state['How_Long_TV_PC_Daily_Hour'], st.session_state['How_Long_TV_PC_Daily_Hour'])
+        tvpc_new = st.slider("Consider spending less hours infront of the TV/PV: ", 0, st.session_state['How_Long_TV_PC_Daily_Hour'], st.session_state['How_Long_TV_PC_Daily_Hour'])
     else: 
         tvpc_new = st.session_state['How_Long_TV_PC_Daily_Hour']
     if all_names[4] in topfeatures:
@@ -1158,7 +1158,7 @@ def dt_improvement():
     else:
         clothes_new = st.session_state['How_Many_New_Clothes_Monthly']
     if all_names[5] in topfeatures:
-        internet_new = st.slider("Consider using the internet less: ", 0, st.session_state['How_Long_Internet_Daily_Hour'], st.session_state['How_Long_Internet_Daily_Hour'])
+        internet_new = st.slider("Consider spending less hours on the internet: ", 0, st.session_state['How_Long_Internet_Daily_Hour'], st.session_state['How_Long_Internet_Daily_Hour'])
     else:
         internet_new = st.session_state['How_Long_Internet_Daily_Hour']
         
@@ -1612,7 +1612,7 @@ def lgbm_improvement():
                               st.session_state['Transport_Vehicle_Type_car (type: electric)'],st.session_state['Transport_Vehicle_Type_car (type: hybrid)'],
                               st.session_state['Transport_Vehicle_Type_car (type: lpg)']]
         prev_trans = [s for i, s in zip(prev_trans_options, trans_options) if i == 1]
-        transport_new = st.selectbox("Consider switching to a better way of transportation: ", options = trans_options, index = prev_trans[0])
+        transport_new = st.selectbox("Consider switching to a environmentally more friendly way of transportation: ", options = trans_options, index = prev_trans[0])
     else:
         trans_options =  ["walk/bicycle", "public transport", "car (type: petrol)", "car (type: diesel)", "car (type: electric)", "car (type: hybrid)", "car (type: lpg)"]
         prev_trans_options = [st.session_state['Transport_Vehicle_Type_walk/bicycle'], st.session_state['Transport_Vehicle_Type_public transport'],
@@ -1627,17 +1627,17 @@ def lgbm_improvement():
     
 
     if all_names[5] in topfeatures:
-        groceries_new = st.slider("Consider buying less groceries: ", 0.0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1) *1.1
+        groceries_new = st.slider("Consider spending less on groceries (in Euro): ", 0.0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1) *1.1
     else:    
         groceries_new = st.session_state['Monthly_Grocery_Bill']
  
     if all_names[3] in topfeatures:
-        km_new = st.slider("Consider to travel less: ", 0, st.session_state['Vehicle_Monthly_Distance_Km'], st.session_state['Vehicle_Monthly_Distance_Km'])
+        km_new = st.slider("Consider travelling less (in km): ", 0, st.session_state['Vehicle_Monthly_Distance_Km'], st.session_state['Vehicle_Monthly_Distance_Km'])
     else:
        km_new = st.session_state['Vehicle_Monthly_Distance_Km']
    
     if all_names[4] in topfeatures:
-        wastebag_count_new = st.slider("Consider producing less waste: ", 0, st.session_state['Waste_Bag_Weekly_Count'], st.session_state['Waste_Bag_Weekly_Count'])
+        wastebag_count_new = st.slider("Consider producing less waste (less bags of waste): ", 0, st.session_state['Waste_Bag_Weekly_Count'], st.session_state['Waste_Bag_Weekly_Count'])
     else:
         wastebag_count_new = st.session_state['Waste_Bag_Weekly_Count']
    
@@ -1647,7 +1647,7 @@ def lgbm_improvement():
         clothes_new = st.session_state['How_Many_New_Clothes_Monthly']
    
     if all_names[6] in topfeatures:
-        internet_new = st.slider("Consider using the internet less: ", 0, st.session_state['How_Long_Internet_Daily_Hour'], st.session_state['How_Long_Internet_Daily_Hour'])
+        internet_new = st.slider("Consider spending less hours on the internet: ", 0, st.session_state['How_Long_Internet_Daily_Hour'], st.session_state['How_Long_Internet_Daily_Hour'])
     else:
         internet_new = st.session_state['How_Long_Internet_Daily_Hour']
 
