@@ -516,7 +516,7 @@ def reg_improvement():
     else:
           transport_new = st.session_state['Transport']
     if all_names[10] in topfeatures:
-        groceries_new = st.slider("Consider buying less groceries: ", 0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1)*1.1
+        groceries_new = st.slider("Consider buying less groceries: ", 0.0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1)*1.1
     else:    
         groceries_new = st.session_state['Monthly_Grocery_Bill']
     if all_names[11] in topfeatures:
@@ -1136,7 +1136,7 @@ def dt_improvement():
         private_new = 0
     
     if all_names[0] in topfeatures:
-        groceries_new = st.slider("Consider buying less groceries: ", 0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1) *1.1
+        groceries_new = st.slider("Consider buying less groceries: ", 0.0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1) *1.1
     else:    
         groceries_new = st.session_state['Monthly_Grocery_Bill']
     if all_names[1] in topfeatures:
@@ -1624,7 +1624,7 @@ def lgbm_improvement():
     
 
     if all_names[5] in topfeatures:
-        groceries_new = st.slider("Consider buying less groceries: ", 0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1) *1.1
+        groceries_new = st.slider("Consider buying less groceries: ", 0.0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1) *1.1
     else:    
         groceries_new = st.session_state['Monthly_Grocery_Bill']
  
