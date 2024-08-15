@@ -177,7 +177,7 @@ def reg_survey_life():
     if 'Monthly_Grocery_Bill' in st.session_state: # check if previously answered
         default = st.session_state['Monthly_Grocery_Bill'] # use previous value
     else:
-        default = 1 # use default
+        default = int(173/1.1) # use default
     groceries = st.number_input("How much do you spend on groceries in a month (in Euro)?", min_value = 0, max_value = int(1e6), value = default)
     
     # QUESTION FOR New CLothes
@@ -199,7 +199,7 @@ def reg_survey_life():
     if 'Waste_Bag_Weekly_Count' in st.session_state: # check if previously answered
         default = st.session_state['Waste_Bag_Weekly_Count'] # use previous value
     else:
-        default = 1 # use default
+        default = 4 # use default
     wastebag_count = st.number_input("How many bags of waste do you produce per week?", min_value = 0, max_value = int(1e6), value = default)
    
     # QUESTION FOR RECYCLING
@@ -215,14 +215,14 @@ def reg_survey_life():
     if 'How_Long_TV_PC_Daily_Hour' in st.session_state: # check if previously answered
         default = st.session_state['How_Long_TV_PC_Daily_Hour'] # use previous value
     else:
-        default = 1 # use default
+        default = 12 # use default
     tvpc = st.number_input("How many hours do you spend infront of the TV or PC per day?", min_value = 0, max_value = 24, value = default)
     
     # QUESTION FOR Internet usage
     if 'How_Long_Internet_Daily_Hour' in st.session_state: # check if previously answered
         default = st.session_state['How_Long_Internet_Daily_Hour'] # use previous value
     else:
-        default = 1 # use default
+        default = 12 # use default
     internet = st.number_input("How many hours do you use the internet per day?", min_value = 0, max_value = 24, value = default)
     
     col1, col2, col3 = st.columns(3)
@@ -314,7 +314,7 @@ def reg_survey_travel():
     if 'Vehicle_Monthly_Distance_Km' in st.session_state: # check if previously answered
         default = st.session_state['Vehicle_Monthly_Distance_Km'] # use previous value
     else:
-        default = 1 # use default
+        default = 823 # use default
     km =  st.number_input("How many kilometers do you travel per month?", min_value = 0, max_value = int(1e6), value = default)
    
     # QUESTION FOR Frequency of plane usage
@@ -393,7 +393,7 @@ def reg_results():
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    predValue = max(prediction[0],0)
+    predValue = max(prediction[0])
     st.header(str(round(predValue)) + " " + unit.translate(SUB))
     #st.write(str(round(prediction[0])))
     
@@ -609,7 +609,7 @@ def reg_improvement():
     st.write("If you would apply these change, your new, monthly Carbon Footprint would be:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    predValue_new = max(prediction_new[0],0)
+    predValue_new = max(0,prediction_new[0])
     st.header(str(round(predValue_new)) + " " + unit.translate(SUB))
     
     st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(predValue_new)) + " " + unit.translate(SUB)+" per month!")
@@ -732,7 +732,7 @@ def dt_survey_life():
     if 'Monthly_Grocery_Bill' in st.session_state: # check if previously answered
         default = st.session_state['Monthly_Grocery_Bill'] # use previous value
     else:
-        default = 1 # use default
+        default = int(173/1.1) # use default
     groceries = st.number_input("How much do you spend on groceries in a month (in Euro)?", min_value = 0, max_value = int(1e6), value = default)
     
     # QUESTION FOR New CLothes
@@ -754,7 +754,7 @@ def dt_survey_life():
     if 'Waste_Bag_Weekly_Count' in st.session_state: # check if previously answered
         default = st.session_state['Waste_Bag_Weekly_Count'] # use previous value
     else:
-        default = 1 # use default
+        default = 4 # use default
     wastebag_count = st.number_input("How many bags of waste do you produce per week?", min_value = 0, max_value = int(1e6), value = default)
    
     # QUESTION FOR RECYCLING
@@ -770,14 +770,14 @@ def dt_survey_life():
     if 'How_Long_TV_PC_Daily_Hour' in st.session_state: # check if previously answered
         default = st.session_state['How_Long_TV_PC_Daily_Hour'] # use previous value
     else:
-        default = 1 # use default
+        default = 12 # use default
     tvpc = st.number_input("How many hours do you spend infront of the TV or PC per day?", min_value = 0, max_value = 24, value = default)
     
     # QUESTION FOR Internet usage
     if 'How_Long_Internet_Daily_Hour' in st.session_state: # check if previously answered
         default = st.session_state['How_Long_Internet_Daily_Hour'] # use previous value
     else:
-        default = 1 # use default
+        default = 12 # use default
     internet = st.number_input("How many hours do you use the internet per day?", min_value = 0, max_value = 24, value = default)
     
     col1, col2, col3 = st.columns(3)
@@ -872,7 +872,7 @@ def dt_survey_travel():
     if 'Vehicle_Monthly_Distance_Km' in st.session_state: # check if previously answered
         default = st.session_state['Vehicle_Monthly_Distance_Km'] # use previous value
     else:
-        default = 1 # use default
+        default = 823 # use default
     km =  st.number_input("How many kilometers do you travel per month?", min_value = 0, max_value = int(1e6), value = default)
    
     # QUESTION FOR Frequency of plane usage
@@ -970,7 +970,7 @@ def dt_results():
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    predValue = max(prediction[0],0)
+    predValue = max(0,prediction[0])
     st.header(str(round(predValue)) + " " + unit.translate(SUB))
 
     st.write("This is where that leaves you in comparision to the population:")
@@ -1305,7 +1305,7 @@ def lgbm_survey_all():
     if 'Monthly_Grocery_Bill' in st.session_state: # check if previously answered
         default = st.session_state['Monthly_Grocery_Bill'] # use previous value
     else:
-        default = 1 # use default
+        default = int(173/1.1) # use default
     groceries = st.number_input("How much do you spend on groceries in a month (in Euro)?", min_value = 0, max_value = int(1e6), value = default)
     
     # QUESTION FOR New CLothes
@@ -1319,14 +1319,14 @@ def lgbm_survey_all():
     if 'Waste_Bag_Weekly_Count' in st.session_state: # check if previously answered
         default = st.session_state['Waste_Bag_Weekly_Count'] # use previous value
     else:
-        default = 1 # use default
+        default = 4 # use default
     wastebag_count = st.number_input("How many bags of waste do you produce per week?", min_value = 0, max_value = int(1e6), value = default)
    
     # QUESTION FOR Internet usage
     if 'How_Long_Internet_Daily_Hour' in st.session_state: # check if previously answered
         default = st.session_state['How_Long_Internet_Daily_Hour'] # use previous value
     else:
-        default = 1 # use default
+        default = 12 # use default
     internet = st.number_input("How many hours do you use the internet per day?", min_value = 0, max_value = 24, value = default)
     
     heatOptions = ["coal", "electricity", "natural gas", "wood"] # define options
@@ -1348,7 +1348,7 @@ def lgbm_survey_all():
     if 'Vehicle_Monthly_Distance_Km' in st.session_state: # check if previously answered
         default = st.session_state['Vehicle_Monthly_Distance_Km'] # use previous value
     else:
-        default = 1 # use default
+        default = 823 # use default
     km =  st.number_input("How many kilometers do you travel per month?", min_value = 0, max_value = int(1e6), value = default)
    
     # QUESTION FOR Frequency of plane usage
