@@ -158,7 +158,7 @@ def reg_survey_life():
     st.write("Now some questions about your day to day activties, expenses and the waste you produce.")
     
     # QUESTION FOR Showering
-    questOptions = ["daily", "less frequently", "twice a day", "more frequently"] # define options
+    questOptions = ["less frequently", "daily", "twice a day", "more frequently"] # define options
     if 'How_Often_Shower' in st.session_state: # check if question has been nswered yet
         default = questOptions.index(st.session_state['How_Often_Shower']) # use previous index of answer
     else:
