@@ -610,6 +610,7 @@ def reg_improvement():
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
     predValue_new = max(prediction_new[0],0)
+    st.write(predValue_new)
     st.header(str(round(predValue_new)) + " " + unit.translate(SUB))
     
     st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(predValue_new)) + " " + unit.translate(SUB)+" per month!")
