@@ -393,6 +393,8 @@ def reg_results():
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+    st.write(type(prediction[0]))
+    st.write(prediction[0])
     predValue = max([0,prediction[0]])
     st.header(str(round(predValue)) + " " + unit.translate(SUB))
     #st.write(str(round(prediction[0])))
