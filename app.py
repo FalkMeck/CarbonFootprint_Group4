@@ -416,22 +416,22 @@ def reg_results():
 
     earths = round(((predValue*12)/sequestration_rate)/gha_earth,3)
     earths_max = math.ceil(earths)
-
+    
     earthsImage = []
     for i in range(earths_max):
         if i == 0:
             earthsImage = earth
         else:
             earthsImage = np.append(earthsImage, earth, 1)
-    
+        
     st.write("You woud need")
     st.header(str(earths) + " Earths to live")
     
     # Render the JS and get the width
   #  colWidth = get_width(html=container_width_js)
    # earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
-   
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = None)
+    if earths_max > 0:
+        st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = None)
      
     
     if st.button("Show How to Improve"):
@@ -992,7 +992,7 @@ def dt_results():
 
     earths = round(((predValue*12)/sequestration_rate)/gha_earth,3)
     earths_max = math.ceil(earths)
-
+ 
     earthsImage = []
     for i in range(earths_max):
         if i == 0:
@@ -1007,7 +1007,8 @@ def dt_results():
  #   colWidth = get_width(html=container_width_js)
   #  earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
    
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = None)
+    if earths_max > 0:
+        st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = None)
     
     
     if st.button("Show How to Improve"):
@@ -1510,7 +1511,8 @@ def lgbm_results():
    # colWidth = get_width(html=container_width_js)
   #  earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
    # st.write(colWidth)
-    st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = None)
+    if earths_max < 0:
+        st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = None)
     
     
     if st.button("Show How to Improve"):
