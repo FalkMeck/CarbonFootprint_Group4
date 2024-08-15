@@ -158,7 +158,7 @@ def reg_survey_life():
     st.write("Now some questions about your day to day activties, expenses and the waste you produce.")
     
     # QUESTION FOR Showering
-    questOptions = ["daily", "less frequently", "more frequently", "twice a day"] # define options
+    questOptions = ["daily", "less frequently", "twice a day", "more frequently"] # define options
     if 'How_Often_Shower' in st.session_state: # check if question has been nswered yet
         default = questOptions.index(st.session_state['How_Often_Shower']) # use previous index of answer
     else:
@@ -234,7 +234,7 @@ def reg_survey_life():
     if Next:
         st.session_state['How_Often_Shower'] = shower
         st.session_state['Social_Activity'] = social
-        st.session_state['Monthly_Grocery_Bill'] = groceries
+        st.session_state['Monthly_Grocery_Bill'] = groceries*1.1
         st.session_state['How_Many_New_Clothes_Monthly'] = clothes
         st.session_state['Waste_Bag_Size'] = wastebag_size
         st.session_state['Waste_Bag_Weekly_Count'] = wastebag_count
@@ -271,8 +271,8 @@ def reg_survey_energy():
                 default.append(cook)
     cooking = st.multiselect("Which of the following appliances do you use for cooking?", options = cooking_options, default = default)
     
-    # QUESTION FOR Waste Bag size
-    questOptions = ["Yes", "No", "Sometimes"] # define options
+    # QUESTION FOR Energy efficiency
+    questOptions = ["Yes", "Sometimes", "No"] # define options
     if 'Energy_efficiency' in st.session_state: # check if question has been nswered yet
         default = questOptions.index(st.session_state['Energy_efficiency']) # use previous index of answer
     else:
@@ -393,7 +393,8 @@ def reg_results():
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    st.header(str(round(prediction[0])) + " " + unit.translate(SUB))
+    predValue = max(prediction[0],0)
+    st.header(str(round(predValue)) + " " + unit.translate(SUB))
     #st.write(str(round(prediction[0])))
     
     st.write("This is where that leaves you in comparision to the population:")
@@ -405,13 +406,13 @@ def reg_results():
         template='plotly_dark',
         showlegend=False
         )
-    fig.add_vline(x=prediction[0], line_width=3, line_dash="solid", line_color="red")
+    fig.add_vline(x=predValue, line_width=3, line_dash="solid", line_color="red")
     st.plotly_chart(fig, use_container_width=True)
     
     sequestration_rate = 2100
     gha_earth = 1.63
 
-    earths = round(((prediction[0]*12)/sequestration_rate)/gha_earth,3)
+    earths = round(((predValue*12)/sequestration_rate)/gha_earth,3)
     earths_max = math.ceil(earths)
 
     earthsImage = []
@@ -432,7 +433,7 @@ def reg_results():
      
     
     if st.button("Show How to Improve"):
-         st.session_state['prediction'] = prediction[0]
+         st.session_state['prediction'] = predValue
          st.session_state['dataX'] = X
          st.session_state['page'] ='improve'
          st.rerun()
@@ -485,7 +486,7 @@ def reg_improvement():
     else:
         diet_new = st.session_state['Diet']
     if all_names[2] in topfeatures:
-        shower_new = st.select_slider("Consider showering less frquently: ", options = ["less frequently", "daily", "more frequently", "twice a day"], value = st.session_state['How_Often_Shower'])
+        shower_new = st.select_slider("Consider showering less frquently: ", options = ["less frequently", "daily", "twice a day", "more frequently"], value = st.session_state['How_Often_Shower'])
     else:
         shower_new = st.session_state['How_Often_Shower']
     if all_names[3] in topfeatures:
@@ -515,7 +516,7 @@ def reg_improvement():
     else:
           transport_new = st.session_state['Transport']
     if all_names[10] in topfeatures:
-        groceries_new = st.slider("Consider buying less groceries: ", 0, st.session_state['Monthly_Grocery_Bill'], st.session_state['Monthly_Grocery_Bill'])
+        groceries_new = st.slider("Consider buying less groceries: ", 0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1)*1.1
     else:    
         groceries_new = st.session_state['Monthly_Grocery_Bill']
     if all_names[11] in topfeatures:
@@ -608,9 +609,10 @@ def reg_improvement():
     st.write("If you would apply these change, your new, monthly Carbon Footprint would be:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    st.header(str(round(prediction_new[0])) + " " + unit.translate(SUB))
+    predValue_new = max(prediction_new[0],0)
+    st.header(str(round(predValue_new)) + " " + unit.translate(SUB))
     
-    st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(prediction_new[0])) + " " + unit.translate(SUB)+" per month!")
+    st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(predValue_new)) + " " + unit.translate(SUB)+" per month!")
     
     fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
     fig.update_layout(
@@ -620,7 +622,7 @@ def reg_improvement():
         template='plotly_dark',
         showlegend=False
         )
-    fig.add_vline(x=prediction_new[0], line_width=3, line_dash="solid", line_color="green")
+    fig.add_vline(x=predValue_new, line_width=3, line_dash="solid", line_color="green")
     fig.add_vline(x=st.session_state['prediction'], line_width=3, line_dash="dash", line_color="red")
     st.plotly_chart(fig, use_container_width=True)
 
@@ -787,7 +789,7 @@ def dt_survey_life():
     if Next:
         st.session_state['How_Often_Shower'] = shower
         st.session_state['Social_Activity'] = social
-        st.session_state['Monthly_Grocery_Bill'] = groceries
+        st.session_state['Monthly_Grocery_Bill'] = groceries * 1.1 # Wechselkurs Euro to Dollar
         st.session_state['How_Many_New_Clothes_Monthly'] = clothes
         st.session_state['Waste_Bag_Size'] = wastebag_size
         st.session_state['Waste_Bag_Weekly_Count'] = wastebag_count
@@ -825,7 +827,7 @@ def dt_survey_energy():
                 default.append(cook)
     cooking = st.multiselect("Which of the following appliances do you use for cooking?", options = cooking_options, default = default)
     
-    # QUESTION FOR energy efficinecy
+    # QUESTION FOR energy efficiency
     questOptions = ["Yes", "Sometimes", "No"] # define options
     if 'Energy_efficiency' in st.session_state: # check if question has been nswered yet
         default = st.session_state['Energy_efficiency'] # use previous index of answer
@@ -968,9 +970,9 @@ def dt_results():
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    st.header(str(round(prediction[0])) + " " + unit.translate(SUB))
-    #st.write(str(round(prediction[0])))
-    
+    predValue = max(prediction[0],0)
+    st.header(str(round(predValue)) + " " + unit.translate(SUB))
+
     st.write("This is where that leaves you in comparision to the population:")
     fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
     fig.update_layout(
@@ -980,13 +982,13 @@ def dt_results():
         template='plotly_dark',
         showlegend=False
         )
-    fig.add_vline(x=prediction[0], line_width=3, line_dash="solid", line_color="red")
+    fig.add_vline(x=predValue, line_width=3, line_dash="solid", line_color="red")
     st.plotly_chart(fig, use_container_width=True)
     
     sequestration_rate = 2100
     gha_earth = 1.63
 
-    earths = round(((prediction[0]*12)/sequestration_rate)/gha_earth,3)
+    earths = round(((predValue*12)/sequestration_rate)/gha_earth,3)
     earths_max = math.ceil(earths)
 
     earthsImage = []
@@ -1007,7 +1009,7 @@ def dt_results():
     
     
     if st.button("Show How to Improve"):
-         st.session_state['prediction'] = prediction[0]
+         st.session_state['prediction'] = predValue
          st.session_state['dataX'] = data
          st.session_state['page'] ='improve'
          st.rerun()
@@ -1134,7 +1136,7 @@ def dt_improvement():
         private_new = 0
     
     if all_names[0] in topfeatures:
-        groceries_new = st.slider("Consider buying less groceries: ", 0, st.session_state['Monthly_Grocery_Bill'], st.session_state['Monthly_Grocery_Bill'])
+        groceries_new = st.slider("Consider buying less groceries: ", 0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1) *1.1
     else:    
         groceries_new = st.session_state['Monthly_Grocery_Bill']
     if all_names[1] in topfeatures:
@@ -1235,9 +1237,10 @@ def dt_improvement():
     st.write("If you would apply these change, your new, monthly Carbon Footprint would be:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    st.header(str(round(prediction_new[0])) + " " + unit.translate(SUB))
+    predValue_new = max(prediction_new[0],0)
+    st.header(str(round(predValue_new)) + " " + unit.translate(SUB))
     
-    st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(prediction_new[0])) + " " + unit.translate(SUB)+" per month!")
+    st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(predValue_new)) + " " + unit.translate(SUB)+" per month!")
     
     fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
     fig.update_layout(
@@ -1370,7 +1373,7 @@ def lgbm_survey_all():
         st.session_state['How_Many_New_Clothes_Monthly'] = clothes
         st.session_state['Vehicle_Monthly_Distance_Km'] = km
         st.session_state['Waste_Bag_Weekly_Count'] = wastebag_count
-        st.session_state['Monthly_Grocery_Bill'] = groceries
+        st.session_state['Monthly_Grocery_Bill'] = groceries*1.1
         st.session_state['How_Long_Internet_Daily_Hour'] = internet
 
         for t in transOptions:
@@ -1471,7 +1474,8 @@ def lgbm_results():
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    st.header(str(round(prediction[0])) + " " + unit.translate(SUB))
+    predValue = max(prediction[0],0)
+    st.header(str(round(predValue)) + " " + unit.translate(SUB))
     
     st.write("This is where that leaves you in comparision to the population:")
     fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
@@ -1482,13 +1486,13 @@ def lgbm_results():
         template='plotly_dark',
         showlegend=False
         )
-    fig.add_vline(x=prediction[0], line_width=3, line_dash="solid", line_color="red")
+    fig.add_vline(x=predValue, line_width=3, line_dash="solid", line_color="red")
     st.plotly_chart(fig, use_container_width=True)
     
     sequestration_rate = 2100
     gha_earth = 1.63
 
-    earths = round(((prediction[0]*12)/sequestration_rate)/gha_earth,3)
+    earths = round(((predValue*12)/sequestration_rate)/gha_earth,3)
     earths_max = math.ceil(earths)
 
     earthsImage = []
@@ -1508,7 +1512,7 @@ def lgbm_results():
     
     
     if st.button("Show How to Improve"):
-         st.session_state['prediction'] = prediction[0]
+         st.session_state['prediction'] = predValue
          st.session_state['dataX'] = data
          st.session_state['page'] ='improve'
          st.rerun()
@@ -1620,7 +1624,7 @@ def lgbm_improvement():
     
 
     if all_names[5] in topfeatures:
-        groceries_new = st.slider("Consider buying less groceries: ", 0, st.session_state['Monthly_Grocery_Bill'], st.session_state['Monthly_Grocery_Bill'])
+        groceries_new = st.slider("Consider buying less groceries: ", 0, st.session_state['Monthly_Grocery_Bill']/1.1, st.session_state['Monthly_Grocery_Bill']/1.1) *1.1
     else:    
         groceries_new = st.session_state['Monthly_Grocery_Bill']
  
@@ -1681,9 +1685,10 @@ def lgbm_improvement():
     st.write("If you would apply these change, your new, monthly Carbon Footprint would be:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    st.header(str(round(prediction_new[0])) + " " + unit.translate(SUB))
+    predValue_new = max(prediction_new[0],0)
+    st.header(str(round(predValue_new)) + " " + unit.translate(SUB))
     
-    st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(prediction_new[0])) + " " + unit.translate(SUB)+" per month!")
+    st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(predValue_new)) + " " + unit.translate(SUB)+" per month!")
     
     fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
     fig.update_layout(
@@ -1693,7 +1698,7 @@ def lgbm_improvement():
         template='plotly_dark',
         showlegend=False
         )
-    fig.add_vline(x=prediction_new[0], line_width=3, line_dash="solid", line_color="green")
+    fig.add_vline(x=predValue_new, line_width=3, line_dash="solid", line_color="green")
     fig.add_vline(x=st.session_state['prediction'], line_width=3, line_dash="dash", line_color="red")
     st.plotly_chart(fig, use_container_width=True)
     
