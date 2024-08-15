@@ -393,7 +393,7 @@ def reg_results():
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    predValue = max(0,prediction[0])
+    predValue = max([0,prediction[0]])
     st.header(str(round(predValue)) + " " + unit.translate(SUB))
     #st.write(str(round(prediction[0])))
     
@@ -609,7 +609,7 @@ def reg_improvement():
     st.write("If you would apply these change, your new, monthly Carbon Footprint would be:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    predValue_new = max(0,prediction_new[0])
+    predValue_new = max([0,prediction_new[0]])
     st.header(str(round(predValue_new)) + " " + unit.translate(SUB))
     
     st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(predValue_new)) + " " + unit.translate(SUB)+" per month!")
@@ -970,7 +970,7 @@ def dt_results():
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    predValue = max(0,prediction[0])
+    predValue = max([0,prediction[0]])
     st.header(str(round(predValue)) + " " + unit.translate(SUB))
 
     st.write("This is where that leaves you in comparision to the population:")
@@ -1237,7 +1237,7 @@ def dt_improvement():
     st.write("If you would apply these change, your new, monthly Carbon Footprint would be:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    predValue_new = max(0,prediction_new[0])
+    predValue_new = max([0,prediction_new[0]])
     st.header(str(round(predValue_new)) + " " + unit.translate(SUB))
     
     st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(predValue_new)) + " " + unit.translate(SUB)+" per month!")
@@ -1474,7 +1474,7 @@ def lgbm_results():
     st.write("Your current, monthly Carbon Footprint is:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    predValue = max(0,prediction[0])
+    predValue = max([0,prediction[0]])
     st.header(str(round(predValue)) + " " + unit.translate(SUB))
     
     st.write("This is where that leaves you in comparision to the population:")
@@ -1685,7 +1685,7 @@ def lgbm_improvement():
     st.write("If you would apply these change, your new, monthly Carbon Footprint would be:")
     unit = "kgCO2e"
     SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    predValue_new = max(0,prediction_new[0])
+    predValue_new = max([0,prediction_new[0]])
     st.header(str(round(predValue_new)) + " " + unit.translate(SUB))
     
     st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(predValue_new)) + " " + unit.translate(SUB)+" per month!")
