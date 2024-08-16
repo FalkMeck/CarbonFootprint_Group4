@@ -1313,7 +1313,7 @@ def lgbm_survey_all():
     wastebag_count = st.number_input("How many bags of waste do you produce per week?", min_value = 0, max_value = int(1e6), value = default)
    
     # QUESTION FOR main means of transportations
-    questOptions = ["walk/bicycle", "public transport", "petrol", "diesel", "electric", "hybrid", "lpg"]# define options
+    questOptions = ["walk/bicycle", "public", "petrol", "diesel", "electric", "hybrid", "lpg"]# define options
     if 'Transport' in st.session_state: # check if question has been nswered yet
         default = questOptions.index(st.session_state['Transport']) # use previous index of answer
     else:
@@ -1461,7 +1461,7 @@ def lgbm_improvement():
  
     plane_new = st.select_slider("Consider travelling less by plane: ", options = ["never", "rarely", "frequently", "very frequently"], value = st.session_state['Frequency_of_Traveling_by_Air'])
     
-    transportOptions = ["electric", "hybrid", "public" "walk/bicycle", "diesel", "lpg", "petrol"]
+    transportOptions = ["electric", "hybrid", "public" ,"walk/bicycle", "diesel", "lpg", "petrol"]
     transIndex = transportOptions.index(st.session_state['Transport'])
     transport_new = st.selectbox("Consider switching to a environmentally more friendly way of transportation: ", options = transportOptions, index = transIndex)
      
