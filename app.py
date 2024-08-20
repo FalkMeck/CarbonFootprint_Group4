@@ -674,7 +674,7 @@ def short_survey_image_classifier():
     st.header("Mode of Transportation")
     
     st.write("Please upload a picture of your usual mode of transport?")
-    prob = 0
+    prob = 1
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"], accept_multiple_files=False)
     if uploaded_file is not None:
         img = Image.open(uploaded_file)
@@ -684,8 +684,8 @@ def short_survey_image_classifier():
         
         st.write("Classifying...")
         this_is, prob = predict_image(img, learner)
-        print(f"Prediction: {this_is}, Confidence: {prob}")
-        print(f"This is a: {this_is}.")
+        st.write(f"Prediction: {this_is}, Confidence: {prob}")
+        st.write(f"This is a: {this_is}.")
     if prob <= 0.95:
         st.write("Sorry, the image classification was not successful. Please select your mode of transportation manually.")
         questOptions = ["walk/bicycle", "public", "petrol", "diesel", "electric", "hybrid", "lpg"]# define options
