@@ -202,10 +202,10 @@ def reg_survey_life():
     
     # QUESTION FOR New CLothes
     if 'How_Many_New_Clothes_Monthly' in st.session_state: # check if previously answered
-        default = int(st.session_state['How_Many_New_Clothes_Monthly']/1.1) # use previous value
+        default = st.session_state['How_Many_New_Clothes_Monthly']/1.1 # use previous value
     else:
         default = 1 # use default
-    clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0, max_value = int(1e6), value = default)    
+    clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0.0, max_value = int(1e6), value = default)    
     
     # QUESTION FOR Waste Bag size
     questOptions = ["small", "medium", "large", "extra large"] # define options
@@ -745,10 +745,10 @@ def short_survey_rest():
     
     # QUESTION FOR New CLothes
     if 'How_Many_New_Clothes_Monthly' in st.session_state: # check if previously answered
-        default = int(st.session_state['How_Many_New_Clothes_Monthly']/1.1) # use previous value
+        default = st.session_state['How_Many_New_Clothes_Monthly']/1.1 # use previous value
     else:
         default = 1 # use default
-    clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0, max_value = int(1e6), value = default)    
+    clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0.0, max_value = int(1e6), value = default)    
     
     # QUESTION FOR Waste Bag Count
     if 'Waste_Bag_Weekly_Count' in st.session_state: # check if previously answered
@@ -855,10 +855,10 @@ def lgbm_survey_all():
     
     # QUESTION FOR New CLothes
     if 'How_Many_New_Clothes_Monthly' in st.session_state: # check if previously answered
-        default = int(st.session_state['How_Many_New_Clothes_Monthly']/1.1) # use previous value
+        default = st.session_state['How_Many_New_Clothes_Monthly']/1.1 # use previous value
     else:
         default = 1 # use default
-    clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0, max_value = int(1e6), value = default)    
+    clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0.0, max_value = int(1e6), value = default)    
     
     # QUESTION FOR Waste Bag Count
     if 'Waste_Bag_Weekly_Count' in st.session_state: # check if previously answered
