@@ -674,7 +674,7 @@ def short_survey_image_classifier():
     st.header("Mode of Transportation")
     
     st.write("Please upload a picture of your usual mode of transport?")
-    prob = 1
+    prob = None;
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"], accept_multiple_files=False)
     if uploaded_file is not None:
         img = Image.open(uploaded_file)
@@ -686,27 +686,28 @@ def short_survey_image_classifier():
         this_is, prob = predict_image(img, learner)
         st.write(f"Prediction: {this_is}, Confidence: {prob}")
         st.write(f"This is a: {this_is}.")
-    if prob <= 0.95:
-        st.write("Sorry, the image classification was not successful. Please select your mode of transportation manually.")
-        questOptions = ["walk/bicycle", "public", "petrol", "diesel", "electric", "hybrid", "lpg"]# define options
-        if 'Transport' in st.session_state: # check if question has been nswered yet
-            default = questOptions.index(st.session_state['Transport']) # use previous index of answer
-        else:
-            default = 0 # default is using first answer
-        transport = st.radio("What is your main method of transportation?", options = questOptions, horizontal = False, index = default)
-    else:
-        if this_is == 'car':
-            questOptions = ["petrol", "diesel", "electric", "hybrid", "lpg"]# define options
+    if prob is not None:
+        if prob <= 0.95:
+            st.write("Sorry, the image classification was not successful. Please select your mode of transportation manually.")
+            questOptions = ["walk/bicycle", "public", "petrol", "diesel", "electric", "hybrid", "lpg"]# define options
             if 'Transport' in st.session_state: # check if question has been nswered yet
                 default = questOptions.index(st.session_state['Transport']) # use previous index of answer
             else:
                 default = 0 # default is using first answer
-            transport = st.radio("Please select the fuel source of your car.", options = questOptions, horizontal = False, index = default)
-        else: 
-            if this_is == 'bus':
-                transport = "public"
-            elif this_is == 'bicycle':
-                transport ="walk/bicycle"
+            transport = st.radio("What is your main method of transportation?", options = questOptions, horizontal = False, index = default)
+        else:
+            if this_is == 'car':
+                questOptions = ["petrol", "diesel", "electric", "hybrid", "lpg"]# define options
+                if 'Transport' in st.session_state: # check if question has been nswered yet
+                    default = questOptions.index(st.session_state['Transport']) # use previous index of answer
+                else:
+                    default = 0 # default is using first answer
+                transport = st.radio("Please select the fuel source of your car.", options = questOptions, horizontal = False, index = default)
+            else: 
+                if this_is == 'bus':
+                    transport = "public"
+                elif this_is == 'bicycle':
+                    transport ="walk/bicycle"
             
     col1, col2, col3 = st.columns(3)
     with col3:
