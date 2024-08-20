@@ -670,9 +670,11 @@ def short_survey_image_classifier():
 
     uploaded_file = st.file_uploader("Choose an Image file (JPG,PNG)", accept_multiple_files=False)
     if uploaded_file is not None:
-        this_is,_,probs = learner.predict(PILImage.create(uploaded_file))
-        print(f"This is a: {this_is}.")
-        print(f"Probability it's a bicycle: {probs[0]:.4f}") #probs[0] steht für Fahrrad
+        st.write(uploaded_file)
+        probs = 0
+        #this_is,_,probs = learner.predict(PILImage.create(uploaded_file))
+        #print(f"This is a: {this_is}.")
+        #print(f"Probability it's a bicycle: {probs[0]:.4f}") #probs[0] steht für Fahrrad
     if probs <= 0.95:
         st.write("Sorry, the image classification was not successful. Please select your mode of transportation manually.")
         questOptions = ["walk/bicycle", "public", "petrol", "diesel", "electric", "hybrid", "lpg"]# define options
