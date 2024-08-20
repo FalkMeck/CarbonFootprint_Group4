@@ -14,9 +14,8 @@ import matplotlib.image as img
 import math
 import plotly.express as px
 import lightgbm as lgb
-import cv2
+from PIL import Image
 from fastai.vision.all import *
-from fastcore.all import *
 
 
 # st.write(sklearn.__version__)
@@ -669,17 +668,20 @@ def short_survey_image_classifier():
     st.header("Mode of Transportation")
     
     st.write("Please upload a picture of your usual mode of transport?")
-    probs = 0
-    uploaded_file = st.file_uploader("Choose an Image file (JPG,PNG)", accept_multiple_files=False)
+    prob = 0
+    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"], accept_multiple_files=False)
     if uploaded_file is not None:
-        file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
-        opencv_image = cv2.imdecode(file_bytes, 1)
-        st.image(opencv_image, channels="RGB")
+        img = Image.open(uploaded_file)
+       
+        st.image(img, caption = 'Uploaded image', use_column_width= True)
+        st.write("")
         
-        #this_is,_,probs = learner.predict(PILImage.create(uploaded_file))
-        #print(f"This is a: {this_is}.")
-        #print(f"Probability it's a bicycle: {probs[0]:.4f}") #probs[0] steht für Fahrrad
-    if probs <= 0.95:
+        st.write("Classifying...")
+        this_is, pred_idx, probs = learner.predict(img)
+        prob = probs[pred_idx]
+        print(f"This is a: {this_is}.")
+        print(f"Probability it's a bicycle: {probs[0]:.4f}") #probs[0] steht für Fahrrad
+    if prob <= 0.95:
         st.write("Sorry, the image classification was not successful. Please select your mode of transportation manually.")
         questOptions = ["walk/bicycle", "public", "petrol", "diesel", "electric", "hybrid", "lpg"]# define options
         if 'Transport' in st.session_state: # check if question has been nswered yet
