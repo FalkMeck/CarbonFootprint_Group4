@@ -15,6 +15,7 @@ import math
 import plotly.express as px
 import lightgbm as lgb
 from PIL import Image
+from fastai.callback.progress import ProgressCallback
 from fastai.vision.all import *
 
 
@@ -64,6 +65,11 @@ def load_image_classifier():
        learner_f= load_learner(f)
     return learner_f
 
+def predict_image(img, learner):
+    # Disable callbacks (including progress bar) during prediction
+    with learner.no_bar():
+        pred_class, pred_idx, probs = learner.predict(img)
+    return pred_class, probs[pred_idx]
 
 model_reg,encoder,cfdata = load_model_and_encoder()
 model_dt = load_model_tree()
@@ -677,10 +683,9 @@ def short_survey_image_classifier():
         st.write("")
         
         st.write("Classifying...")
-        this_is, pred_idx, probs = learner.predict(img, with_progress=False)
-        prob = probs[pred_idx]
+        this_is, prob = predict_image(img, learner)
+        print(f"Prediction: {this_is}, Confidence: {prob}")
         print(f"This is a: {this_is}.")
-        print(f"Probability it's a bicycle: {probs[0]:.4f}") #probs[0] steht für Fahrrad
     if prob <= 0.95:
         st.write("Sorry, the image classification was not successful. Please select your mode of transportation manually.")
         questOptions = ["walk/bicycle", "public", "petrol", "diesel", "electric", "hybrid", "lpg"]# define options
