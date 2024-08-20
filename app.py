@@ -14,8 +14,7 @@ import matplotlib.image as img
 import math
 import plotly.express as px
 import lightgbm as lgb
-from fastai.vision.all import PILImage
-from fastai.vision import load_learner
+from fastai.vision.all import *
 
 # st.write(sklearn.__version__)
 
