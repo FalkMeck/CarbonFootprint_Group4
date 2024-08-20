@@ -195,19 +195,15 @@ def reg_survey_life():
     
     # QUESTION FOR Groceries
     if 'Monthly_Grocery_Bill' in st.session_state: # check if previously answered
-        default = st.session_state['Monthly_Grocery_Bill'] # use previous value
+        default = int(st.session_state['Monthly_Grocery_Bill']/1.1) # use previous value
     else:
         default = int(173/1.1) # use default
     groceries = st.number_input("How much do you spend on groceries in a month (in Euro)?", min_value = 0, max_value = int(1e6), value = default)
     
     # QUESTION FOR New CLothes
     if 'How_Many_New_Clothes_Monthly' in st.session_state: # check if previously answered
-        st.write(default)
-        st.write(type(default))
-        default = int(st.session_state['How_Many_New_Clothes_Monthly'][0]/1.1) # use previous value
+        default = st.session_state['How_Many_New_Clothes_Monthly'] # use previous value
     else:
-        st.write(default)
-        st.write(type(default))
         default = 1 # use default
     clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0, max_value = int(1e6), value = default)    
     
@@ -749,7 +745,7 @@ def short_survey_rest():
     
     # QUESTION FOR New CLothes
     if 'How_Many_New_Clothes_Monthly' in st.session_state: # check if previously answered
-        default = int(st.session_state['How_Many_New_Clothes_Monthly'][0]/1.1) # use previous value
+        default = st.session_state['How_Many_New_Clothes_Monthly'] # use previous value
     else:
         default = 1 # use default
     clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0, max_value = int(1e6), value = default)    
@@ -859,7 +855,7 @@ def lgbm_survey_all():
     
     # QUESTION FOR New CLothes
     if 'How_Many_New_Clothes_Monthly' in st.session_state: # check if previously answered
-        default = int(st.session_state['How_Many_New_Clothes_Monthly'][0]/1.1) # use previous value
+        default = st.session_state['How_Many_New_Clothes_Monthly'] # use previous value
     else:
         default = 1 # use default
     clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0, max_value = int(1e6), value = default)    
