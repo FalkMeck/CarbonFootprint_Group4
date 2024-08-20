@@ -7,3 +7,4 @@ plotly
 lightgbm
 fastai
 fastcore
+cv2

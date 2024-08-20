@@ -14,8 +14,10 @@ import matplotlib.image as img
 import math
 import plotly.express as px
 import lightgbm as lgb
+import cv2
 from fastai.vision.all import *
 from fastcore.all import *
+
 
 # st.write(sklearn.__version__)
 
@@ -667,11 +669,13 @@ def short_survey_image_classifier():
     st.header("Mode of Transportation")
     
     st.write("Please upload a picture of your usual mode of transport?")
-
+    probs = 0
     uploaded_file = st.file_uploader("Choose an Image file (JPG,PNG)", accept_multiple_files=False)
     if uploaded_file is not None:
-        st.write(uploaded_file)
-        probs = 0
+        file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
+        opencv_image = cv2.imdecode(file_bytes, 1)
+        st.image(opencv_image, channels="RGB")
+        
         #this_is,_,probs = learner.predict(PILImage.create(uploaded_file))
         #print(f"This is a: {this_is}.")
         #print(f"Probability it's a bicycle: {probs[0]:.4f}") #probs[0] steht für Fahrrad
