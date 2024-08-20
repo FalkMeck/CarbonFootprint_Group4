@@ -202,11 +202,13 @@ def reg_survey_life():
     
     # QUESTION FOR New CLothes
     if 'How_Many_New_Clothes_Monthly' in st.session_state: # check if previously answered
+        st.write(default)
+        st.write(type(default))
         default = int(st.session_state['How_Many_New_Clothes_Monthly'][0]/1.1) # use previous value
     else:
+        st.write(default)
+        st.write(type(default))
         default = 1 # use default
-    st.write(default)
-    st.write(type(default))
     clothes = st.number_input("How many new pieces of clothing do you buy in a month?", min_value = 0, max_value = int(1e6), value = default)    
     
     # QUESTION FOR Waste Bag size
