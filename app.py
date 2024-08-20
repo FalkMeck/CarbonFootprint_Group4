@@ -262,7 +262,8 @@ def reg_survey_life():
             st.session_state['Recycling_' + rec] = 1 if rec in recycle else 0
         st.session_state['How_Long_TV_PC_Daily_Hour'] = tvpc
         st.session_state['How_Long_Internet_Daily_Hour'] = internet
-        
+    
+    if Next:
         st.session_state['page'] = 'survey_energy'
         st.rerun()
     if Back:
@@ -310,7 +311,7 @@ def reg_survey_energy():
         for cook in cooking_options:
             st.session_state['Cooking_With_' + cook] = 1 if cook in cooking else 0
         st.session_state['Energy_efficiency'] = energy_eff
-        
+    if Next:
         st.session_state['page'] ='survey_travel'
         st.rerun()
     if Back:
@@ -355,7 +356,7 @@ def reg_survey_travel():
          st.session_state['Transport'] = transport
          st.session_state['Vehicle_Monthly_Distance_Km'] = km
          st.session_state['Frequency_of_Traveling_by_Air'] = plane
-         
+    if Next:
          st.session_state['page'] ='results'
          st.rerun()
     if Back:
@@ -804,6 +805,7 @@ def short_survey_rest():
         st.session_state['Height_tmp'] = height
         st.session_state['Weight_tmp'] = weight
         
+    if Next:
         st.session_state['page'] = 'results'
         st.rerun()    
     
@@ -812,130 +814,6 @@ def short_survey_rest():
       st.rerun()     
             
 
-def short_results():
-    st.title("Carbon Footpint Questionnaire")
-    st.header("Results")
-    
-    all_names = ['Vehicle_Monthly_Distance_Km',
-                 'How_Many_New_Clothes_Monthly',
-                 'Waste_Bag_Weekly_Count',
-                 'Frequency_of_Traveling_by_Air',
-                 'Body_Type',
-                 'Transport_Vehicle_Type']
-    
-    data = pd.DataFrame([[st.session_state['Vehicle_Monthly_Distance_Km'],
-                         st.session_state['How_Many_New_Clothes_Monthly'],
-                         st.session_state['Waste_Bag_Weekly_Count'],
-                         st.session_state['Frequency_of_Traveling_by_Air'],
-                         st.session_state['Body_Type'],
-                         st.session_state['Transport']]], columns=all_names)
-    
-    X = encoder_lgbm.transform(data)
-
-    prediction = model_lgbm.predict(X)
-    st.write("Your current, monthly Carbon Footprint is:")
-    unit = "kgCO2e"
-    SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    predValue = max([0,prediction[0]])
-    st.header(str(round(predValue)) + " " + unit.translate(SUB))
-    
-    st.write("This is where that leaves you in comparision to the population:")
-    fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
-    fig.update_layout(
-        xaxis_title='Carbon Emissions (' + unit.translate(SUB)+ ')',
-        yaxis_title='Frequency',
-        bargap=0,
-        template='plotly_dark',
-        showlegend=False
-        )
-    fig.add_vline(x=predValue, line_width=3, line_dash="solid", line_color="red")
-    st.plotly_chart(fig, use_container_width=True)
-    
-    sequestration_rate = 2100
-    gha_earth = 1.63
-
-    earths = round(((predValue*12)/sequestration_rate)/gha_earth,3)
-    earths_max = math.ceil(earths)
-
-    earthsImage = []
-    for i in range(earths_max):
-        if i == 0:
-            earthsImage = earth
-        else:
-            earthsImage = np.append(earthsImage, earth, 1)
-    
-    st.write("You woud need")
-    st.header(str(earths) + " Earths to live")
-    
-   # colWidth = get_width(html=container_width_js)
-  #  earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
-   # st.write(colWidth)
-    if earths_max < 0:
-        st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = None)
-    
-    
-    if st.button("Show How to Improve"):
-         st.session_state['prediction'] = predValue
-         st.session_state['page'] ='improve'
-         st.rerun()
-    
-def short_improvement():
-
-    all_names = ['Vehicle_Monthly_Distance_Km',
-                 'How_Many_New_Clothes_Monthly',
-                 'Waste_Bag_Weekly_Count',
-                 'Frequency_of_Traveling_by_Air',
-                 'Body_Type',
-                 'Transport_Vehicle_Type']
-    
-    st.title("Carbon Footpint Questionnaire")
-    
-    st.write("Your current, monthly Carbon Footprint before applying any changes is:")
-    unit = "kgCO2e"
-    SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    st.header(str(round(st.session_state['prediction'])) + " " + unit.translate(SUB))
-
-    st.header("How to improve your score:")
- 
-    plane_new = st.select_slider("Consider travelling less by plane: ", options = ["never", "rarely", "frequently", "very frequently"], value = st.session_state['Frequency_of_Traveling_by_Air'])
-    
-    transportOptions = ["electric", "hybrid", "public" ,"walk/bicycle", "diesel", "lpg", "petrol"]
-    transIndex = transportOptions.index(st.session_state['Transport'])
-    transport_new = st.selectbox("Consider switching to a environmentally more friendly way of transportation: ", options = transportOptions, index = transIndex)
-     
-    km_new = st.slider("Consider travelling less (in km): ", 0, st.session_state['Vehicle_Monthly_Distance_Km'], st.session_state['Vehicle_Monthly_Distance_Km'])
-    
-    wastebag_count_new = st.slider("Consider producing less waste (less bags of waste): ", 0, st.session_state['Waste_Bag_Weekly_Count'], st.session_state['Waste_Bag_Weekly_Count'])
-    
-    clothes_new = st.slider("Consider buying less new clothes: ", 0, st.session_state['How_Many_New_Clothes_Monthly'], st.session_state['How_Many_New_Clothes_Monthly'])
-    
-    data_new = pd.DataFrame([[km_new,
-                              clothes_new,
-                              wastebag_count_new,
-                              plane_new,
-                              st.session_state['Body_Type'],
-                              transport_new]], columns=all_names)
-    X_new = encoder_lgbm.transform(data_new)
-    prediction_new = model_lgbm.predict(X_new)
-    st.write("If you would apply these change, your new, monthly Carbon Footprint would be:")
-    unit = "kgCO2e"
-    SUB = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
-    predValue_new = max([0,prediction_new[0]])
-    st.header(str(round(predValue_new)) + " " + unit.translate(SUB))
-    
-    st.write("That is an improvement of " + str(round(st.session_state['prediction']) - round(predValue_new)) + " " + unit.translate(SUB)+" per month!")
-    
-    fig = px.histogram(cfdata, nbins=100, title='Interactive Histogram of Carbon Emissions', marginal='rug')
-    fig.update_layout(
-        xaxis_title='Carbon Emissions (' + unit.translate(SUB)+ ')',
-        yaxis_title='Frequency',
-        bargap=0,
-        template='plotly_dark',
-        showlegend=False
-        )
-    fig.add_vline(x=predValue_new, line_width=3, line_dash="solid", line_color="green")
-    fig.add_vline(x=st.session_state['prediction'], line_width=3, line_dash="dash", line_color="red")
-    st.plotly_chart(fig, use_container_width=True)
 
 def lgbm_survey_welcome():
     st.title("Carbon Footprint Questionnaire")
