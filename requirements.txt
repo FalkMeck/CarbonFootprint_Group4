@@ -6,4 +6,4 @@ matplotlib
 plotly
 lightgbm
 fastai
-pillow
+Pillow
