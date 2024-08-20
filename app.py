@@ -15,6 +15,7 @@ import math
 import plotly.express as px
 import lightgbm as lgb
 from fastai.vision.all import *
+from fastcore.all import *
 
 # st.write(sklearn.__version__)
 
@@ -1169,11 +1170,11 @@ def selction_tool():
     
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-      Regression = st.button("Questionnaire (3 min)")
+      Regression = st.button("Questionnaire \n (3 min)")
     with col2:
-        RegShort = st.button("Questionnaire (1 min)")
+        RegShort = st.button("Questionnaire \n (1 min)")
     with col3:
-       RegShortPlus = st.button("Questionnaire (with Image Classification)")
+       RegShortPlus = st.button("Questionnaire \n (with Image Classification)")
     with col4:
         st.download_button(label="Download Decision Tree Print-Out", data=PDFbyte, file_name="test.pdf", mime='application/octet-stream')
         
