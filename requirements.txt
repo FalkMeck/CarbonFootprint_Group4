@@ -6,4 +6,4 @@ matplotlib
 plotly
 lightgbm
 fastai
-Pillow
+Pillow==9.2.0
