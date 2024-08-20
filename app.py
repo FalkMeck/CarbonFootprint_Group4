@@ -15,6 +15,7 @@ import math
 import plotly.express as px
 import lightgbm as lgb
 from fastai.vision.all import PILImage
+from fastai.vision import load_learner
 
 # st.write(sklearn.__version__)
 
@@ -59,7 +60,7 @@ def load_earth_image():
 @st.cache_resource
 def load_image_classifier():
     with open('model_image-classifier.pkl', 'rb') as f:
-        learner_f = pickle.load(f)
+       learner_f= load_learner(f)
     return learner_f
 
 
