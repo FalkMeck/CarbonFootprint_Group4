@@ -58,7 +58,7 @@ def load_earth_image():
 
 @st.cache_resource
 def load_image_classifier():
-    with open('model_image-classifier.pkl') as f:
+    with open('model_image-classifier.pkl', 'rb') as f:
         learner_f = pickle.load(f)
     return learner_f
 
