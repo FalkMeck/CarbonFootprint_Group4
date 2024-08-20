@@ -677,7 +677,7 @@ def short_survey_image_classifier():
         st.write("")
         
         st.write("Classifying...")
-        this_is, pred_idx, probs = learner.predict(img)
+        this_is, pred_idx, probs = learner.predict(img, with_progress=False)
         prob = probs[pred_idx]
         print(f"This is a: {this_is}.")
         print(f"Probability it's a bicycle: {probs[0]:.4f}") #probs[0] steht für Fahrrad
