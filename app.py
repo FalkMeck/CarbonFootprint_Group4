@@ -173,7 +173,7 @@ def reg_survey_demo():
         st.rerun()        
 
 def reg_survey_life():
-    st.title("Carbon Footpint Questionnaire")
+    st.title("Carbon Footprint Questionnaire")
     st.header("Daily life")
     st.write("Now some questions about your day to day activties, expenses and the waste you produce.")
     
@@ -271,7 +271,7 @@ def reg_survey_life():
         st.rerun()
 
 def reg_survey_energy():
-    st.title("Carbon Footpint Questionnaire")
+    st.title("Carbon Footprint Questionnaire")
     st.header("Energy efficiency")
     st.write("How enegery efficient are you already?")
     
@@ -319,7 +319,7 @@ def reg_survey_energy():
         st.rerun()           
 
 def reg_survey_travel():
-    st.title("Carbon Footpint Questionnaire")
+    st.title("Carbon Footprint Questionnaire")
     st.header("Travelling")
     st.write("Lastly, some question about yout means of getting around and how much you travel.")
     
@@ -364,7 +364,7 @@ def reg_survey_travel():
          st.rerun()
 
 def reg_results():
-    st.title("Carbon Footpint Questionnaire")
+    st.title("Carbon Footprint Questionnaire")
     st.header("Results")
 
     ordinalVar=['Body_Type', 'Diet', 'How_Often_Shower', 'Social_Activity', 'Frequency_of_Traveling_by_Air',
@@ -493,7 +493,7 @@ def reg_improvement():
     all_names = ordinalVar + dummyVar + numVar + restVar
 
     
-    st.title("Carbon Footpint Questionnaire")
+    st.title("Carbon Footprint Questionnaire")
     
     st.write("Your current, monthly Carbon Footprint before applying any changes is:")
     unit = "kgCO2e"
@@ -671,7 +671,7 @@ def short_survey_welcome():
     
 
 def short_survey_image_classifier():
-    st.title("Carbon Footpint Questionnaire")
+    st.title("Carbon Footprint Questionnaire")
     st.header("Mode of Transportation")
     
     st.write("Please upload a picture of your usual mode of transport?")
@@ -929,7 +929,7 @@ def lgbm_survey_all():
             
             
 def lgbm_results():
-    st.title("Carbon Footpint Questionnaire")
+    st.title("Carbon Footprint Questionnaire")
     st.header("Results")
     
     all_names = ['Vehicle_Monthly_Distance_Km',
@@ -986,7 +986,7 @@ def lgbm_results():
    # colWidth = get_width(html=container_width_js)
   #  earth_width = min(colWidth , int(earths*earth.shape[1]*0.1))
    # st.write(colWidth)
-    if earths_max < 0:
+    if earths_max > 0:
         st.image(earthsImage[:,range(int(earths*earth.shape[1])),:], channels="RGB", output_format="auto",width = None)
     
     
@@ -1005,7 +1005,7 @@ def lgbm_improvement():
                  'Body_Type',
                  'Transport_Vehicle_Type']
     
-    st.title("Carbon Footpint Questionnaire")
+    st.title("Carbon Footprint Questionnaire")
     
     st.write("Your current, monthly Carbon Footprint before applying any changes is:")
     unit = "kgCO2e"
