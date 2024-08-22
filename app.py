@@ -699,7 +699,7 @@ def short_survey_image_classifier():
         else:
             if this_is == 'car':
                 questOptions = ["petrol", "diesel", "electric", "hybrid", "lpg"]# define options
-                if 'Transport' in st.session_state: # check if question has been nswered yet
+                if 'Transport' in st.session_state and st.session_state['Transport'] in questOptions: # check if question has been nswered yet
                     default = questOptions.index(st.session_state['Transport']) # use previous index of answer
                 else:
                     default = 0 # default is using first answer
