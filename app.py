@@ -678,7 +678,7 @@ def short_survey_image_classifier():
     prob = None;
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"], accept_multiple_files=False)
     if uploaded_file is not None:
-        img = Image.open(uploaded_file)
+        img = Image.open(uploaded_file).convert('RGB')
        
         st.image(img, caption = 'Uploaded image', use_column_width= True)
         st.write("")
